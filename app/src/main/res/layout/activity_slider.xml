@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SliderActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2Slider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <me.relex.circleindicator.CircleIndicator3
+        android:id="@+id/ci3Slider"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        app:ci_drawable="@drawable/bg_indicator_3"/>
+    <TextView
+        android:id="@+id/tvSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Skip"
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:textColor="@color/white"
+        android:clickable="true"/>
+</RelativeLayout>

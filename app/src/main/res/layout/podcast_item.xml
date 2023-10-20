@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@drawable/gradient_pink_blue"
+        android:alpha="0.8"
+        android:layout_marginRight="25dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:cardCornerRadius="50dp"
+            android:layout_marginTop="15dp">
+            <ImageView
+                android:id="@+id/ivPodcast"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/may_podcast_image"
+                android:scaleType="centerCrop"/>
+        </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/tvPodcastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MÂY Podcast"
+            android:textSize="23sp"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/pinkRedColor"
+            android:paddingLeft="40dp"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/tvPodcastAuthorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MÂY Podcast"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/lightPinkOrangeColor"
+            android:paddingLeft="40dp"/>
+    </LinearLayout>
+</LinearLayout>
