@@ -32,7 +32,7 @@ public class MainAppAdapter extends FragmentStateAdapter {
             case 4:
                 return new AccountFragment();
             default:
-                return new PlaylistFragment();
+                return new HomeFragment();
         }
     }
 

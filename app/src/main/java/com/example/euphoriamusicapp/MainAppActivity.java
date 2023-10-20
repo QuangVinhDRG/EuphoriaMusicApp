@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,19 +57,25 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.menuPlaylist) {
-                    viewPager2.setCurrentItem(0);
+                    viewPager2.setCurrentItem(0, false);
                 } else if (item.getItemId() == R.id.menuSearch) {
-                    viewPager2.setCurrentItem(1);
+                    viewPager2.setCurrentItem(1, false);
                 } else if (item.getItemId() == R.id.menuHome) {
-                    viewPager2.setCurrentItem(2);
+                    viewPager2.setCurrentItem(2, false);
                 } else if (item.getItemId() == R.id.menuRank) {
-                    viewPager2.setCurrentItem(3);
+                    viewPager2.setCurrentItem(3, false);
                 } else if (item.getItemId() == R.id.menuAccount) {
-                    viewPager2.setCurrentItem(4);
+                    viewPager2.setCurrentItem(4, false);
                 }
                 return true;
             }
         });
+        viewPager2.setUserInputEnabled(false);
+        if (savedInstanceState == null) {
+            bottomNavigationView.setSelectedItemId(R.id.menuHome);
+        }
+
+
 //        layoutMiniPlayMusic.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
