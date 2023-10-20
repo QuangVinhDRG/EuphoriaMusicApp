@@ -141,7 +141,6 @@
     </LinearLayout>
     <ListView
         android:layout_below="@id/recentSearchTitle"
-        android:layout_above="@id/miniPlayMusic"
         android:id="@+id/lvRecentSearch"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"

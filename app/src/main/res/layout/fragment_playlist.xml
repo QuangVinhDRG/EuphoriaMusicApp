@@ -62,7 +62,6 @@
     </LinearLayout>
     <LinearLayout
         android:layout_below="@id/headerNavigation"
-        android:layout_above="@id/miniPlayMusic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
