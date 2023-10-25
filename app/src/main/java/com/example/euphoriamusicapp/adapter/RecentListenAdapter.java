@@ -10,15 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.data.RecentMusic;
+import com.example.euphoriamusicapp.data.BasicMusicInformation;
 
 import java.util.List;
 
 public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapter.RecentListenViewHolder>{
-    private List<RecentMusic> recentMusicList;
+    private List<BasicMusicInformation> basicMusicInformationList;
 
-    public RecentListenAdapter(List<RecentMusic> recentListenList) {
-        this.recentMusicList = recentListenList;
+    public RecentListenAdapter(List<BasicMusicInformation> recentListenList) {
+        this.basicMusicInformationList = recentListenList;
     }
 
     @NonNull
@@ -30,19 +30,19 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecentListenViewHolder holder, int position) {
-        RecentMusic recentMusic = recentMusicList.get(position);
-        if (recentMusic == null) {
+        BasicMusicInformation basicMusicInformation = basicMusicInformationList.get(position);
+        if (basicMusicInformation == null) {
             return;
         } else {
-            holder.ivRecentListen.setImageResource(recentMusic.getResourceId());
-            holder.tvSongName.setText(recentMusic.getSongName());
-            holder.tvAuthorName.setText(recentMusic.getAuthorName());
+            holder.ivRecentListen.setImageResource(basicMusicInformation.getResourceId());
+            holder.tvSongName.setText(basicMusicInformation.getSongName());
+            holder.tvAuthorName.setText(basicMusicInformation.getAuthorName());
         }
     }
 
     @Override
     public int getItemCount() {
-        return recentMusicList.size();
+        return basicMusicInformationList.size();
     }
 
     public class RecentListenViewHolder extends RecyclerView.ViewHolder {

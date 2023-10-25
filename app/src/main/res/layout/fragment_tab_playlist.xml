@@ -14,6 +14,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageButton
+            android:id="@+id/ibAddPlaylist"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/plus_icon"
@@ -30,6 +31,9 @@
             android:textStyle="bold"
             android:textColor="@color/black"/>
     </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

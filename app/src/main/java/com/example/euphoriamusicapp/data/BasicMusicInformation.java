@@ -1,11 +1,14 @@
 package com.example.euphoriamusicapp.data;
 
-public class RecentMusic {
+public class BasicMusicInformation {
     private int resourceId;
     private String songName;
     private String authorName;
 
-    public RecentMusic(int resourceId, String songName, String authorName) {
+    public BasicMusicInformation() {
+    }
+
+    public BasicMusicInformation(int resourceId, String songName, String authorName) {
         this.resourceId = resourceId;
         this.songName = songName;
         this.authorName = authorName;

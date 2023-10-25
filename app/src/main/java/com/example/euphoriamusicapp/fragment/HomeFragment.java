@@ -27,7 +27,7 @@ import com.example.euphoriamusicapp.data.HotAlbum;
 import com.example.euphoriamusicapp.data.ImageOfMusic;
 import com.example.euphoriamusicapp.data.NewReleaseMusic;
 import com.example.euphoriamusicapp.data.Podcast;
-import com.example.euphoriamusicapp.data.RecentMusic;
+import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.TopicAndCategory;
 import com.example.euphoriamusicapp.data.TrendingArtist;
 
@@ -179,14 +179,14 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
-    private List<RecentMusic> getRecentListenList() {
-        List<RecentMusic> list = new ArrayList<>();
-        list.add(new RecentMusic(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Sơn Tùng MTP"));
-        list.add(new RecentMusic(R.drawable.cruel_summer_image, "Cruel Summer", "Taylor Swift"));
-        list.add(new RecentMusic(R.drawable.khoc_o_trong_club_image, "Khóc ở trong club", "Hiền Hồ"));
-        list.add(new RecentMusic(R.drawable.kill_this_love_image, "Kill This Love", "BLACKPINK"));
-        list.add(new RecentMusic(R.drawable.neu_luc_do_image, "Nếu lúc đó", "tlinh, 2pillz"));
-        list.add(new RecentMusic(R.drawable.vai_cau_noi_co_khien_nguoi_thay_doi_image, "Vài câu nói có...", "GreyD, tlinh"));
+    private List<BasicMusicInformation> getRecentListenList() {
+        List<BasicMusicInformation> list = new ArrayList<>();
+        list.add(new BasicMusicInformation(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Sơn Tùng MTP"));
+        list.add(new BasicMusicInformation(R.drawable.cruel_summer_image, "Cruel Summer", "Taylor Swift"));
+        list.add(new BasicMusicInformation(R.drawable.khoc_o_trong_club_image, "Khóc ở trong club", "Hiền Hồ"));
+        list.add(new BasicMusicInformation(R.drawable.kill_this_love_image, "Kill This Love", "BLACKPINK"));
+        list.add(new BasicMusicInformation(R.drawable.neu_luc_do_image, "Nếu lúc đó", "tlinh, 2pillz"));
+        list.add(new BasicMusicInformation(R.drawable.vai_cau_noi_co_khien_nguoi_thay_doi_image, "Vài câu nói có...", "GreyD, tlinh"));
         return list;
     }
 

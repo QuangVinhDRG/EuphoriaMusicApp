@@ -10,4 +10,6 @@
     <color name="lightBlueColor">#CCE7EF</color>
     <color name="pinkRedColor">#EA3F54</color>
     <color name="lightPinkOrangeColor">#F47075</color>
+    <color name="yellowBrownColor">#AE9A9C</color>
+    <color name="darkYellowBrownColor">#575353</color>
 </resources>

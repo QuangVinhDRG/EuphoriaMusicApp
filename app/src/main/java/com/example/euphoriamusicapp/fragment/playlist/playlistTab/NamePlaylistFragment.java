@@ -1,30 +1,26 @@
-package com.example.euphoriamusicapp.fragment.playlist;
+package com.example.euphoriamusicapp.fragment.playlist.playlistTab;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.adapter.PlaylistTabAdapter;
-import com.example.euphoriamusicapp.data.Playlist;
-import com.example.euphoriamusicapp.fragment.playlist.playlistTab.NamePlaylistFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.euphoriamusicapp.fragment.PlaylistFragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link TabPlaylistFragment#newInstance} factory method to
+ * Use the {@link NamePlaylistFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabPlaylistFragment extends Fragment {
+public class NamePlaylistFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,11 +30,11 @@ public class TabPlaylistFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ListView lvPlaylist;
     private View view;
-    private ImageButton ibAddPlaylist;
+    private ImageButton ibBack;
+    private Button btnCancelPlaylist, btnAddPlaylist;
 
-    public TabPlaylistFragment() {
+    public NamePlaylistFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +44,11 @@ public class TabPlaylistFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TabPlaylistFragment.
+     * @return A new instance of fragment NamePlaylistFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TabPlaylistFragment newInstance(String param1, String param2) {
-        TabPlaylistFragment fragment = new TabPlaylistFragment();
+    public static NamePlaylistFragment newInstance(String param1, String param2) {
+        NamePlaylistFragment fragment = new NamePlaylistFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,24 +69,31 @@ public class TabPlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_tab_playlist, container, false);
-        lvPlaylist = view.findViewById(R.id.lvPlaylist);
-        ibAddPlaylist = view.findViewById(R.id.ibAddPlaylist);
-        lvPlaylist.setAdapter(new PlaylistTabAdapter(getPlaylists()));
-        ibAddPlaylist.setOnClickListener(new View.OnClickListener() {
+        view = inflater.inflate(R.layout.fragment_name_playlist, container, false);
+        ibBack = view.findViewById(R.id.ibBack);
+        btnCancelPlaylist = view.findViewById(R.id.btnCancelPlaylist);
+        btnAddPlaylist = view.findViewById(R.id.btnAddPlaylist);
+
+        ibBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(NamePlaylistFragment.this).commit();
+            }
+        });
+        btnAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.playlistFragmentLayout, new NamePlaylistFragment(), "namePlaylistFragment");
+                fragmentTransaction.replace(R.id.namePlaylistFragmentLayout, new ManagePlaylistFragment(), "managePlaylistFragment");
                 fragmentTransaction.commit();
             }
         });
+        btnCancelPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(NamePlaylistFragment.this).commit();
+            }
+        });
         return view;
-    }
-
-    private List<Playlist> getPlaylists() {
-        List<Playlist> list = new ArrayList<>();
-        list.add(new Playlist(R.drawable.playlist_1, "Top bài hát hay nhất của Văn Mai Hương", "Văn Mai Hương"));
-        return list;
     }
 }

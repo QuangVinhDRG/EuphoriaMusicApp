@@ -1,20 +1,22 @@
 package com.example.euphoriamusicapp.fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.LibraryAdapter;
 import com.example.euphoriamusicapp.adapter.ViewPagerPlaylistTabAdapter;
 import com.example.euphoriamusicapp.data.Library;
+import com.example.euphoriamusicapp.fragment.playlist.SongFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -83,12 +85,23 @@ public class PlaylistFragment extends Fragment {
         tlPlaylist.setupWithViewPager(vpPlaylist);
         LibraryAdapter libraryAdapter = new LibraryAdapter(getLibraryList(), getContext());
         gvLibrary.setAdapter(libraryAdapter);
+        gvLibrary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
+                    fragmentTransaction.commit();
+                }
+            }
+        });
         return view;
     }
 
     private List<Library> getLibraryList() {
+        SongFragment songFragment = new SongFragment();
         List<Library> list = new ArrayList<>();
-        list.add(new Library(R.drawable.musical_note_icon, "Bài hát", "100"));
+        list.add(new Library(R.drawable.musical_note_icon, "Bài hát", String.valueOf(songFragment.getFavouriteMusicList().size())));
         list.add(new Library(R.drawable.microphone_with_wire_icon, "Nghệ sĩ", null));
         list.add(new Library(R.drawable.download_icon, "Trên thiết bị", "130"));
         list.add(new Library(R.drawable.upload_icon, "Tải lên", null));
