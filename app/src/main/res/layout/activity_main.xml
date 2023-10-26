@@ -11,7 +11,30 @@
         android:layout_height="600dp"
         android:src="@drawable/headphone"
         android:layout_centerHorizontal="true"
-        android:alpha="0.5"/>
+        android:alpha="0.7"
+        android:translationY="-200dp"/>
+    <TextView
+        android:id="@+id/tvHello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:textSize="40sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="sans-serif-black"
+        android:textStyle="italic"
+        android:textColor="@color/pinkColor"/>
+    <TextView
+        android:id="@+id/tvWelcomeBack"
+        android:layout_below="@id/tvHello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome back!"
+        android:textSize="40sp"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="sans-serif-black"
+        android:textStyle="italic"
+        android:textColor="@color/blueColor"/>
     <ImageButton
         android:id="@+id/loginTab"
         android:background="@null"
@@ -34,8 +57,11 @@
         android:layout_marginBottom="100dp"
         android:layout_marginStart="20dp"/>
     <LinearLayout
+        android:layout_below="@+id/tvWelcomeBack"
+        android:layout_marginTop="30dp"
+        android:paddingBottom="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:visibility="visible"
@@ -73,6 +99,7 @@
                 android:background="@drawable/login_signup_input_box"
                 android:layout_gravity="center_horizontal"
                 android:hint="Enter your email"
+                android:inputType="textEmailAddress"
                 android:paddingStart="20dp"/>
         </LinearLayout>
         <LinearLayout
@@ -95,6 +122,7 @@
                 android:background="@drawable/login_signup_input_box"
                 android:layout_gravity="center_horizontal"
                 android:hint="Enter your password"
+                android:inputType="textPassword"
                 android:paddingStart="20dp"
                 android:drawableEnd="@drawable/hide_password_24"
                 android:paddingEnd="20dp"/>
@@ -163,7 +191,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
                 android:textColor="@color/lightPinkColor"
-                android:paddingBottom="30dp"
                 android:text="Sign up"/>
         </LinearLayout>
     </LinearLayout>

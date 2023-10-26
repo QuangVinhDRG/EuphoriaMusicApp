@@ -8,7 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <ImageButton
-        android:id="@+id/btnBack"
+        android:id="@+id/ibBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/arrow_left_black_24"
@@ -16,7 +16,7 @@
         android:translationX="-5dp"/>
     <RelativeLayout
         android:id="@+id/searchBar"
-        android:layout_below="@id/btnBack"
+        android:layout_below="@id/ibBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

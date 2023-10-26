@@ -30,6 +30,7 @@
                 android:id="@+id/tvPlaylistName"
                 android:layout_width="270dp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:text="Top bài hát hay nhất của Văn Mai Hương"
                 android:layout_marginLeft="10dp"
                 android:textStyle="bold"

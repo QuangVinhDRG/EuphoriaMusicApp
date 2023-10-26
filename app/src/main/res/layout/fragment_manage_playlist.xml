@@ -9,135 +9,117 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
+        android:id="@+id/headerBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:id="@+id/headerBar"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="10dp">
-            <ImageButton
-                android:layout_centerVertical="true"
-                android:id="@+id/ibBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_left_black_24"
-                android:background="@null"
-                android:translationX="-5dp"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/avatarPlaylistFrame"
-            android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:background="@color/white">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/playlist_avatar"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/playlistName"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp">
+        <ImageButton
+            android:layout_centerVertical="true"
+            android:id="@+id/ibBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Playlist của tôi"
-            android:layout_below="@id/avatarPlaylistFrame"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/darkYellowBrownColor"/>
+            android:src="@drawable/arrow_left_black_24"
+            android:background="@null"
+            android:translationX="-5dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/avatarPlaylistFrame"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:background="@color/white">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/playlist_avatar"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/playlistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Playlist của tôi"
+        android:layout_below="@id/avatarPlaylistFrame"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/darkYellowBrownColor"/>
+    <LinearLayout
+        android:id="@+id/numberOfSongFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/playlistName"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tvPlaylistNumberOfSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/darkYellowBrownColor"
+            android:textSize="15sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" bài hát"
+            android:textColor="@color/darkYellowBrownColor"
+            android:textSize="15sp"/>
+    </LinearLayout>
+    <android.widget.Button
+        android:id="@+id/btnRandomPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_below="@id/numberOfSongFrame"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Phát ngẫu nhiên"
+        android:background="@drawable/random_play_disabled_background"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textAllCaps="false"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_below="@id/btnRandomPlay"
+        android:layout_marginTop="20dp">
         <LinearLayout
-            android:id="@+id/numberOfSongFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@+id/playlistName"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/tvPlaylistNumberOfSong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="@color/darkYellowBrownColor"
-                android:textSize="15sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" bài hát"
-                android:textColor="@color/darkYellowBrownColor"
-                android:textSize="15sp"/>
-        </LinearLayout>
-        <android.widget.Button
-            android:id="@+id/btnRandomPlay"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_below="@id/numberOfSongFrame"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="Phát ngẫu nhiên"
-            android:background="@drawable/random_play_disabled_background"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:textColor="@color/white"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textAllCaps="false"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:layout_below="@id/btnRandomPlay"
-            android:layout_marginTop="20dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal">
-                <ImageButton
-                    android:id="@+id/ibAddPlaylist"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/plus_icon"
-                    android:scaleType="centerCrop"
-                    android:padding="17dp"
-                    android:background="#E9E5E6"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="Thêm vào danh sách phát"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:gravity="center"
-                    android:background="#4DFFA4AE"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
-            <ListView
-                android:id="@+id/lvAddedPlaylistSong"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"/>
+            android:gravity="center_horizontal">
+            <ImageButton
+                android:id="@+id/ibAddPlaylist"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/plus_icon"
+                android:scaleType="centerCrop"
+                android:padding="17dp"
+                android:background="#E9E5E6"/>
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Gợi ý cho bạn"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="15dp"/>
-            <ListView
-                android:id="@+id/lvPlaylistRecommendSong"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="15dp"/>
+                android:text="Thêm vào danh sách phát"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:gravity="center"
+                android:background="#4DFFA4AE"
+                android:textColor="@color/black"/>
         </LinearLayout>
-    </RelativeLayout>
+        <ListView
+            android:id="@+id/lvAddedPlaylistSong"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"/>
+    </LinearLayout>
 </RelativeLayout>

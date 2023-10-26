@@ -6,17 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.LibraryAdapter;
 import com.example.euphoriamusicapp.adapter.ViewPagerPlaylistTabAdapter;
 import com.example.euphoriamusicapp.data.Library;
 import com.example.euphoriamusicapp.fragment.playlist.SongFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class PlaylistFragment extends Fragment {
     private GridView gvLibrary;
     private TabLayout tlPlaylist;
     private ViewPager vpPlaylist;
+    private ImageButton ibAccount;
 
     public PlaylistFragment() {
         // Required empty public constructor
@@ -95,6 +101,17 @@ public class PlaylistFragment extends Fragment {
                 }
             }
         });
+
+//        ibAccount = view.findViewById(R.id.ibAccount);
+//        ViewGroup viewGroup = view.getRootView().findViewById(R.id.menuPlaylist);
+//        ViewPager2 viewPager2 = this.getLayoutInflater().inflate(R.layout.activity_main_app, viewGroup).findViewById(R.id.viewPagerMain);
+//        ibAccount.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                viewPager2.setCurrentItem(4, false);
+//                Toast.makeText(getContext(), "Hello", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         return view;
     }
 

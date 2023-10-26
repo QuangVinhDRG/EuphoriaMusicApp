@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainAppActivity"
-    android:background="@drawable/app_background_gradient_45deg">
+    android:background="@drawable/app_background_gradient_45deg"
+    android:id="@+id/rlMainApp">
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMain"
         android:layout_width="match_parent"

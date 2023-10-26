@@ -3,7 +3,6 @@ package com.example.euphoriamusicapp.fragment.playlist.playlistTab;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.AddedPlaylistSongAdapter;
-import com.example.euphoriamusicapp.adapter.PlaylistSongAdapter;
 import com.example.euphoriamusicapp.data.BasicMusicInformation;
 
 import java.util.ArrayList;
@@ -97,18 +95,15 @@ public class ManagePlaylistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_manage_playlist, container, false);
-        lvPlaylistRecommendSong = view.findViewById(R.id.lvPlaylistRecommendSong);
         lvAddedPlaylistSong = view.findViewById(R.id.lvAddedPlaylistSong);
         ibBack = view.findViewById(R.id.ibBack);
         btnRandomPlay = view.findViewById(R.id.btnRandomPlay);
         tvPlaylistNumberOfSong = view.findViewById(R.id.tvPlaylistNumberOfSong);
-        PlaylistSongAdapter playlistSongAdapter = new PlaylistSongAdapter(getPlaylistRecommendSong());
-        lvPlaylistRecommendSong.setAdapter(playlistSongAdapter);
 
-        addedPlaylistSongAdapter = new AddedPlaylistSongAdapter(getPlaylistRecommendSong());
+        addedPlaylistSongAdapter = new AddedPlaylistSongAdapter(getPlaylistSong());
         lvAddedPlaylistSong.setAdapter(addedPlaylistSongAdapter);
 
-        tvPlaylistNumberOfSong.setText("2");
+        tvPlaylistNumberOfSong.setText(String.valueOf(getPlaylistSong().size()));
         if (Integer.parseInt(tvPlaylistNumberOfSong.getText().toString()) > 0) {
             btnRandomPlay.setBackgroundResource(R.drawable.random_play_background);
         }
@@ -125,7 +120,7 @@ public class ManagePlaylistFragment extends Fragment {
         return view;
     }
 
-    private List<BasicMusicInformation> getPlaylistRecommendSong() {
+    private List<BasicMusicInformation> getPlaylistSong() {
         List<BasicMusicInformation> list = new ArrayList<>();
         list.add(new BasicMusicInformation(R.drawable.cruel_summer_image, "Cruel Summer", "Taylor Swift"));
         list.add(new BasicMusicInformation(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Sơn Tùng MTP"));
