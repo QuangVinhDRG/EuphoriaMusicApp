@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".fragment.playlist.playlistTab.NamePlaylistFragment"
     android:background="@drawable/app_background_gradient_45deg"
-    android:id="@+id/namePlaylistFragmentLayout">
+    android:id="@+id/namePlaylistFragmentLayout"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
@@ -45,6 +47,7 @@
             android:hint="Playlist của tôi"
             android:paddingLeft="20dp"
             android:textSize="22sp"
+            android:inputType="text"
             android:layout_marginTop="50dp"
             android:backgroundTintMode="screen"
             android:background="@drawable/name_playlist_background"/>

@@ -1,20 +1,17 @@
 package com.example.euphoriamusicapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.euphoriamusicapp.adapter.MainAppAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,11 +22,13 @@ public class MainAppActivity extends AppCompatActivity {
 //    private LinearLayout layoutMiniPlayMusic;
     private ImageButton ibAccount;
     TextView tvMiniPlaySongName;
+    private RelativeLayout rlMainApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_app);
+        rlMainApp = findViewById(R.id.rlMainApp);
         viewPager2 = findViewById(R.id.viewPagerMain);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
 //        layoutMiniPlayMusic = findViewById(R.id.layoutMiniPlayMusic);
@@ -80,14 +79,12 @@ public class MainAppActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.menuHome);
         }
 
-//        ImageButton ibBack = playListFragmentView.findViewById(R.id.ibBack);
-//        ibBack.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                viewPager2.setCurrentItem(2, false);
-//                bottomNavigationView.setSelectedItemId(R.id.menuHome);
-//            }
-//        });
+        try {
+            InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
 
 
 //        layoutMiniPlayMusic.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,6 @@
 package com.example.euphoriamusicapp.fragment.playlist.playlistTab;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,7 +10,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.euphoriamusicapp.R;
@@ -33,6 +36,7 @@ public class NamePlaylistFragment extends Fragment {
     private View view;
     private ImageButton ibBack;
     private Button btnCancelPlaylist, btnAddPlaylist;
+    private EditText etPlaylistName;
 
     public NamePlaylistFragment() {
         // Required empty public constructor
@@ -73,6 +77,16 @@ public class NamePlaylistFragment extends Fragment {
         ibBack = view.findViewById(R.id.ibBack);
         btnCancelPlaylist = view.findViewById(R.id.btnCancelPlaylist);
         btnAddPlaylist = view.findViewById(R.id.btnAddPlaylist);
+        etPlaylistName = view.findViewById(R.id.etPlaylistName);
+        etPlaylistName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) etPlaylistName.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(etPlaylistName.getWindowToken(), 0);
+                }
+            }
+        });
 
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +97,8 @@ public class NamePlaylistFragment extends Fragment {
         btnAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager) btnAddPlaylist.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(btnAddPlaylist.getWindowToken(), 0);
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.namePlaylistFragmentLayout, new ManagePlaylistFragment(), "managePlaylistFragment");
                 fragmentTransaction.commit();

@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.SearchFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
 
     <!-- TODO: Update blank fragment layout -->
     <ImageButton
@@ -31,7 +33,8 @@
             android:background="@null"
             android:hint="Tìm kiếm bài hát, nghệ sĩ,..."
             android:textSize="15sp"
-            android:paddingLeft="25dp"/>
+            android:paddingLeft="25dp"
+            android:inputType="text"/>
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"

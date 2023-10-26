@@ -1,10 +1,17 @@
 package com.example.euphoriamusicapp.fragment;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -46,6 +53,7 @@ public class PlaylistFragment extends Fragment {
     private TabLayout tlPlaylist;
     private ViewPager vpPlaylist;
     private ImageButton ibAccount;
+    private EditText etPlaylistSearch;
 
     public PlaylistFragment() {
         // Required empty public constructor
@@ -86,6 +94,7 @@ public class PlaylistFragment extends Fragment {
         gvLibrary = view.findViewById(R.id.gvLibrary);
         tlPlaylist = view.findViewById(R.id.tlPlaylist);
         vpPlaylist = view.findViewById(R.id.vpPlaylist);
+        etPlaylistSearch = view.findViewById(R.id.etPlaylistSearch);
         ViewPagerPlaylistTabAdapter viewPagerPlaylistTabAdapter = new ViewPagerPlaylistTabAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         vpPlaylist.setAdapter(viewPagerPlaylistTabAdapter);
         tlPlaylist.setupWithViewPager(vpPlaylist);
@@ -102,6 +111,16 @@ public class PlaylistFragment extends Fragment {
             }
         });
 
+        etPlaylistSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    InputMethodManager inputMethodManager = (InputMethodManager) etPlaylistSearch.getContext().getSystemService(INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(etPlaylistSearch.getWindowToken(), 0);
+                }
+            }
+        });
+
 //        ibAccount = view.findViewById(R.id.ibAccount);
 //        ViewGroup viewGroup = view.getRootView().findViewById(R.id.menuPlaylist);
 //        ViewPager2 viewPager2 = this.getLayoutInflater().inflate(R.layout.activity_main_app, viewGroup).findViewById(R.id.viewPagerMain);
@@ -112,6 +131,7 @@ public class PlaylistFragment extends Fragment {
 //                Toast.makeText(getContext(), "Hello", Toast.LENGTH_SHORT).show();
 //            }
 //        });
+
         return view;
     }
 

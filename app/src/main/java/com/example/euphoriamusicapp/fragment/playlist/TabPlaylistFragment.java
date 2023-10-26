@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.PlaylistTabAdapter;
@@ -37,6 +40,9 @@ public class TabPlaylistFragment extends Fragment {
     private ListView lvPlaylist;
     private View view;
     private ImageButton ibAddPlaylist;
+    private LinearLayout llAddPlaylistFrame;
+    private TextView tvAddPlaylist;
+    private boolean addPlaylistClicked = false;
 
     public TabPlaylistFragment() {
         // Required empty public constructor
@@ -69,6 +75,7 @@ public class TabPlaylistFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,13 +83,41 @@ public class TabPlaylistFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_tab_playlist, container, false);
         lvPlaylist = view.findViewById(R.id.lvPlaylist);
         ibAddPlaylist = view.findViewById(R.id.ibAddPlaylist);
+        llAddPlaylistFrame = view.findViewById(R.id.llAddPlaylistFrame);
+        tvAddPlaylist = view.findViewById(R.id.tvAddPlaylist);
         lvPlaylist.setAdapter(new PlaylistTabAdapter(getPlaylists()));
+
         ibAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.playlistFragmentLayout, new NamePlaylistFragment(), "namePlaylistFragment");
                 fragmentTransaction.commit();
+                addPlaylistClicked = true;
+            }
+        });
+        llAddPlaylistFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.playlistFragmentLayout, new NamePlaylistFragment(), "namePlaylistFragment");
+                fragmentTransaction.commit();
+                addPlaylistClicked = true;
+            }
+        });
+        tvAddPlaylist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.playlistFragmentLayout, new NamePlaylistFragment(), "namePlaylistFragment");
+                fragmentTransaction.commit();
+                addPlaylistClicked = true;
+            }
+        });
+        llAddPlaylistFrame.setOnHoverListener(new View.OnHoverListener() {
+            @Override
+            public boolean onHover(View v, MotionEvent event) {
+                return false;
             }
         });
         return view;

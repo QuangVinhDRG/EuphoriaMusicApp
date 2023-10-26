@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.PlaylistFragment"
-    android:id="@+id/playlistFragmentLayout">
+    android:id="@+id/playlistFragmentLayout"
+    android:focusableInTouchMode="true"
+    android:clickable="true">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -36,7 +38,8 @@
                 android:background="@null"
                 android:hint="Tìm kiếm bài hát, nghệ sĩ,..."
                 android:textSize="15sp"
-                android:paddingLeft="25dp"/>
+                android:paddingLeft="25dp"
+                android:inputType="text"/>
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -81,6 +84,7 @@
                 android:textColor="@color/pinkRedColor"
                 android:layout_marginBottom="10dp"/>
             <GridView
+                android:listSelector="@android:color/transparent"
                 android:id="@+id/gvLibrary"
                 android:layout_width="match_parent"
                 android:layout_height="190dp"

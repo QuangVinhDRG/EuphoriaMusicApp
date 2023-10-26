@@ -8,11 +8,14 @@
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:id="@+id/llAddPlaylistFrame"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:clickable="true">
         <ImageButton
             android:id="@+id/ibAddPlaylist"
             android:layout_width="50dp"
@@ -20,10 +23,11 @@
             android:src="@drawable/plus_icon"
             android:scaleType="centerCrop"
             android:padding="17dp"
-            android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/create_playlist_button"/>
         <TextView
+            android:id="@+id/tvAddPlaylist"
+            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tạo playlist"
