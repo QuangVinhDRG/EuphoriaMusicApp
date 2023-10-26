@@ -1,5 +1,6 @@
 package com.example.euphoriamusicapp.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,7 +8,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.euphoriamusicapp.MainActivity;
+import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.R;
 
 /**
@@ -25,6 +31,10 @@ public class AccountFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
+    private LinearLayout llLogout;
+    private ImageView ivLogout;
+    private TextView tvLogout;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -61,6 +71,16 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        view = inflater.inflate(R.layout.fragment_account, container, false);
+        llLogout = view.findViewById(R.id.llLogout);
+        tvLogout = view.findViewById(R.id.tvLogout);
+        ivLogout = view.findViewById(R.id.ivLogout);
+//        llLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+        return view;
     }
 }

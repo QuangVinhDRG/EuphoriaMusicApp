@@ -114,12 +114,6 @@ public class TabPlaylistFragment extends Fragment {
                 addPlaylistClicked = true;
             }
         });
-        llAddPlaylistFrame.setOnHoverListener(new View.OnHoverListener() {
-            @Override
-            public boolean onHover(View v, MotionEvent event) {
-                return false;
-            }
-        });
         return view;
     }
 

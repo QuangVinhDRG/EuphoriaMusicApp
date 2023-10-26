@@ -143,6 +143,7 @@
             android:textAlignment="textEnd"/>
     </LinearLayout>
     <ListView
+        android:scrollbars="none"
         android:layout_below="@id/recentSearchTitle"
         android:id="@+id/lvRecentSearch"
         android:layout_marginTop="10dp"

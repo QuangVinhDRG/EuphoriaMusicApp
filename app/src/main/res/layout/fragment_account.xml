@@ -204,7 +204,7 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/logout"
+        android:id="@+id/llLogout"
         android:layout_below="@id/personalContent"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -212,18 +212,24 @@
         android:gravity="center_vertical"
         android:background="@color/white"
         android:paddingLeft="20dp"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        android:focusableInTouchMode="true">
         <ImageView
+            android:id="@+id/ivLogout"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/logout_icon"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:clickable="true"/>
         <TextView
+            android:id="@+id/tvLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đăng xuất"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:clickable="true"/>
     </LinearLayout>
 </RelativeLayout>
