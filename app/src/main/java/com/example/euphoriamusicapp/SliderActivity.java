@@ -51,7 +51,7 @@ public class SliderActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 handler.removeCallbacks(runnable);
-                handler.postDelayed(runnable, 3000);
+                handler.postDelayed(runnable, 2000);
             }
         });
         tvSkip.setOnClickListener(new View.OnClickListener() {

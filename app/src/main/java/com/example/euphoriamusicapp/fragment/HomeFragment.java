@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 handler.removeCallbacks(runnable);
-                handler.postDelayed(runnable, 3000);
+                handler.postDelayed(runnable, 2000);
             }
         });
 
