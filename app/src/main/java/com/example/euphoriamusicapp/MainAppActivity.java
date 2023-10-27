@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,12 +17,16 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.euphoriamusicapp.adapter.MainAppAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainAppActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
 //    private LinearLayout layoutMiniPlayMusic;
     private ImageButton ibAccount;
-    TextView tvMiniPlaySongName;
+    private TextView tvMiniPlaySongName, tvArtistName;
+    private LinearLayout llMiniPlayMusic, llInfoMiniPlaySong;
+    private CircleImageView civSongImage;
     private RelativeLayout rlMainApp;
 
     @Override
@@ -33,6 +38,10 @@ public class MainAppActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigation);
 //        layoutMiniPlayMusic = findViewById(R.id.layoutMiniPlayMusic);
         tvMiniPlaySongName = findViewById(R.id.tvMiniPlaySongName);
+        tvArtistName = findViewById(R.id.tvArtistName);
+        llMiniPlayMusic = findViewById(R.id.llMiniPlayMusic);
+        llInfoMiniPlaySong = findViewById(R.id.llInfoMiniPlaySong);
+        civSongImage = findViewById(R.id.civSongImage);
         MainAppAdapter mainAppAdapter = new MainAppAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(mainAppAdapter);
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -95,6 +104,34 @@ public class MainAppActivity extends AppCompatActivity {
 //            }
 //        });
         tvMiniPlaySongName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
+                startActivity(intent);
+            }
+        });
+        tvArtistName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
+                startActivity(intent);
+            }
+        });
+        llMiniPlayMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
+                startActivity(intent);
+            }
+        });
+        llInfoMiniPlaySong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
+                startActivity(intent);
+            }
+        });
+        civSongImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);

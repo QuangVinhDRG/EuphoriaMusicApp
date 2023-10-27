@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,9 +34,9 @@ public class AccountFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private View view;
-    private LinearLayout llLogout;
-    private ImageView ivLogout;
-    private TextView tvLogout;
+    private LinearLayout llLogout, llAboutUs;
+    private ImageView ivLogout, ivAboutUs;
+    private TextView tvLogout, tvAboutUs;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -75,12 +77,39 @@ public class AccountFragment extends Fragment {
         llLogout = view.findViewById(R.id.llLogout);
         tvLogout = view.findViewById(R.id.tvLogout);
         ivLogout = view.findViewById(R.id.ivLogout);
+        llAboutUs = view.findViewById(R.id.llAboutUs);
+        ivAboutUs = view.findViewById(R.id.ivAboutUs);
+        tvAboutUs = view.findViewById(R.id.tvAboutUs);
 //        llLogout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //
 //            }
 //        });
+        llAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.rlAccountFragmentLayout, new MemberListFragment(), "memberlistFragment");
+                fragmentTransaction.commit();
+            }
+        });
+        tvAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.rlAccountFragmentLayout, new MemberListFragment(), "memberlistFragment");
+                fragmentTransaction.commit();
+            }
+        });
+        ivAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.rlAccountFragmentLayout, new MemberListFragment(), "memberlistFragment");
+                fragmentTransaction.commit();
+            }
+        });
         return view;
     }
 }
