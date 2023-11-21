@@ -12,7 +12,20 @@
           "package_name": "com.example.euphoriamusicapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "506283952383-aig880s9f2sl2c418o42r9r2bbnd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.euphoriamusicapp",
+            "certificate_hash": "b2ae97a8189ea286371cd0507db5d47230778bfd"
+          }
+        },
+        {
+          "client_id": "506283952383-oqdbhd48tbuumuacdi37v88frf05h6bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA9D745JmV7Iak7SvntN2WB0cMFLAUhdJk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506283952383-drir4rp2vlu27qrenplsdpqcr7d032bs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

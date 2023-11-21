@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="middleDot">" &#8226; "</string>
+    <string name="default_web_client_id">506283952383-oqdbhd48tbuumuacdi37v88frf05h6bt.apps.googleusercontent.com</string>
+    <string name="avatar_default">https://api-private.atlassian.com/users/d4a1567a7fb3b33b05ee3d965080ee6a/avatar</string>
 </resources>

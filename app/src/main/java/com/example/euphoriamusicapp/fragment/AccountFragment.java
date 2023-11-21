@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.WelcomeActivity;
 import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +26,7 @@ import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
  * create an instance of this fragment.
  */
 public class AccountFragment extends Fragment {
-
+    private FirebaseAuth mAuth;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -67,6 +69,7 @@ public class AccountFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -80,6 +83,7 @@ public class AccountFragment extends Fragment {
         llAboutUs = view.findViewById(R.id.llAboutUs);
         ivAboutUs = view.findViewById(R.id.ivAboutUs);
         tvAboutUs = view.findViewById(R.id.tvAboutUs);
+
 //        llLogout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -110,6 +114,19 @@ public class AccountFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
+        tvLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent intent = new Intent();
+                intent.setClass(getActivity(),MainActivity.class);
+                getActivity().startActivity(intent);
+
+            }
+        });
         return view;
     }
+
+
 }

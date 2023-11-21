@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
     ImageButton btnBack;
@@ -27,6 +32,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private Button btn_SinUp;
     private FirebaseAuth mAuth;
+    private FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +45,7 @@ public class SignupActivity extends AppCompatActivity {
         confirmpassword = findViewById(R.id.confirmpassword);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
+        database = FirebaseDatabase.getInstance();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +127,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
     private void SignUpwithFireBase() {
-        if(!email.getText().toString().matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@+^[a-zA-Z0-9.-]+$")){
+        if(Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
             if(password.getText().toString().equals(confirmpassword.getText().toString())){
                 mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
 
@@ -129,6 +135,13 @@ public class SignupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    HashMap<String,Object> map = new HashMap<>();
+                                    map.put("id",user.getUid());
+                                    map.put("name",username.getText().toString());
+                                    map.put("email",user.getEmail());
+                                    map.put("profile",getString(R.string.avatar_default));
+                                    database.getReference().child("users").child(user.getUid()).setValue(map);
                                     Intent intent = new Intent(SignupActivity.this,MainActivity.class);
                                     startActivity(intent);
 
