@@ -41,7 +41,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     Button btnLogin;
 
-    ImageView btnloginGG,btnloginFB,btnloginGitHub;
+    ImageView btnloginGG,btnloginGitHub,btnloginfb;
     TextView tvSignUp, tvForgotPassword;
 
     EditText edtEmail,editPass;
@@ -63,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
         tvSignUp = findViewById(R.id.tvSignUp);
         edtEmail = findViewById(R.id.edtEmail);
         editPass = findViewById(R.id.edtpass);
-
         btnloginGG = findViewById(R.id.btnLoginWithGoogle);
-        btnloginFB = findViewById(R.id.btnLoginWithFB);
-        btnloginGitHub = findViewById(R.id.btnLoginWithApple);
+        btnloginGitHub = findViewById(R.id.btnLoginWithGithub);
+        btnloginfb = findViewById(R.id.btnLoginWithfb);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
         //Auth
@@ -94,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ResetPasswordEmailActivity.class);
                 startActivity(intent);
+            }
+        });
+        btnloginGitHub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,Loginwithgithub.class);
+                startActivity(intent);
+
             }
         });
         btnloginGG.setOnClickListener(new View.OnClickListener() {

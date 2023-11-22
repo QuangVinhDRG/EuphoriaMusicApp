@@ -71,6 +71,7 @@
             android:layout_height="80dp"
             app:cardCornerRadius="40dp">
             <ImageView
+                android:id="@+id/imgprofile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/avatar"/>
@@ -80,13 +81,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginLeft="20dp">
+
             <TextView
+                android:id="@+id/edtUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Như Quỳnh"
-                android:textSize="27sp"
                 android:textColor="@color/black"
-                android:textStyle="bold"/>
+                android:textSize="27sp"
+                android:textStyle="bold" />
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

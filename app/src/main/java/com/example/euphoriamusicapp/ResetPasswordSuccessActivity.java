@@ -15,7 +15,7 @@ public class ResetPasswordSuccessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password_success);
-        btnConfirm = findViewById(R.id.btnConfirmSuccess);
+
         tvBackToLogin = findViewById(R.id.tvBackSuccess);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override

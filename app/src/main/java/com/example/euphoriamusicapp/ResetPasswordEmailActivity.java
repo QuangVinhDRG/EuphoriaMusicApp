@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.integrity.e;
 import com.google.firebase.auth.AuthResult;
@@ -69,24 +70,14 @@ public class ResetPasswordEmailActivity extends AppCompatActivity {
 
     private void Resetpassword() {
         if(Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()){
-            mAuth.fetchSignInMethodsForEmail(edtEmail.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            mAuth.sendPasswordResetEmail(edtEmail.getText().toString())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                           if(task.isSuccessful()){
-                               boolean check = task.getResult().getSignInMethods().isEmpty();
-                               if(check){
-                                   Toast.makeText(ResetPasswordEmailActivity.this, "Invalid email", Toast.LENGTH_SHORT).show();
-                               }
-                               else {
-                                   Intent intent = new Intent(ResetPasswordEmailActivity.this,ResetPasswordNewActivity.class);
-                                   startActivity(intent);
-                                   finish();
-                               }
-                           }
+                        public void onSuccess(Void unused) {
+                            Intent intent = new Intent(ResetPasswordEmailActivity.this,ResetPasswordSuccessActivity.class);
+                            startActivity(intent);
                         }
                     });
-
         }else {
             edtEmail.setError("Invalid Email Pattern!");
             btnConfirm.setEnabled(true);

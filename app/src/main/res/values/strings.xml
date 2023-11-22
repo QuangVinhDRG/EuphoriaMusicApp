@@ -5,4 +5,13 @@
     <string name="middleDot">" &#8226; "</string>
     <string name="default_web_client_id">506283952383-oqdbhd48tbuumuacdi37v88frf05h6bt.apps.googleusercontent.com</string>
     <string name="avatar_default">https://api-private.atlassian.com/users/d4a1567a7fb3b33b05ee3d965080ee6a/avatar</string>
+    <string name="title_activity_login_github">LoginGithubActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>

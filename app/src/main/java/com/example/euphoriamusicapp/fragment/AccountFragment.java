@@ -1,6 +1,7 @@
 package com.example.euphoriamusicapp.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,16 +10,19 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.WelcomeActivity;
 import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,20 +43,13 @@ public class AccountFragment extends Fragment {
     private LinearLayout llLogout, llAboutUs;
     private ImageView ivLogout, ivAboutUs;
     private TextView tvLogout, tvAboutUs;
+    private ImageView imgprofile;
+    private TextView username;
 
     public AccountFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AccountFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static AccountFragment newInstance(String param1, String param2) {
         AccountFragment fragment = new AccountFragment();
         Bundle args = new Bundle();
@@ -83,13 +80,9 @@ public class AccountFragment extends Fragment {
         llAboutUs = view.findViewById(R.id.llAboutUs);
         ivAboutUs = view.findViewById(R.id.ivAboutUs);
         tvAboutUs = view.findViewById(R.id.tvAboutUs);
-
-//        llLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        username = view.findViewById(R.id.edtUsername);
+        imgprofile = view.findViewById(R.id.imgprofile);
+        ShowInfor();
         llAboutUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +119,17 @@ public class AccountFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void ShowInfor() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String name = user.getDisplayName();
+            Uri photoUrl = user.getPhotoUrl();
+
+            username.setText(user.getDisplayName());
+            Glide.with(this).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
+        }
     }
 
 
