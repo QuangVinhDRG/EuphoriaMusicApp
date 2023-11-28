@@ -47,6 +47,7 @@
             android:layout_margin="30dp"
             android:background="@drawable/play_music_image_background">
             <ImageView
+                android:id="@+id/imgSong"
                 android:layout_width="200dp"
                 android:layout_height="250dp"
                 android:layout_alignParentEnd="true"
@@ -87,7 +88,7 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textAlignment="center"
-            android:textSize="25sp"/>
+            android:textSize="20sp"/>
         <TextView
             android:id="@+id/tvPlayMusicArtistName"
             android:layout_below="@id/tvPlayMusicSongName"
@@ -99,7 +100,7 @@
             android:textAllCaps="true"
             android:fontFamily="sans-serif-light"
             android:textAlignment="center"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,13 +110,13 @@
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:progress="30"
+                android:progress="0"
                 android:progressBackgroundTint="@color/white"
                 android:progressBackgroundTintMode="screen"
                 android:progressTint="@color/pinkColor"
                 android:thumbTint="@color/pinkRedColor"/>
             <TextView
-                android:id="@+id/tvStartTime"
+                android:id="@+id/tvCurrentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="00:00"
@@ -124,7 +125,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="20dp"/>
             <TextView
-                android:id="@+id/tvEndTime"
+                android:id="@+id/tvTatolTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="05:05"

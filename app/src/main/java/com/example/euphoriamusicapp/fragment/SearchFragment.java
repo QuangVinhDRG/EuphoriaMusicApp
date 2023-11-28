@@ -94,12 +94,12 @@ public class SearchFragment extends Fragment {
 
     private List<RecentSearch> getRecentSearchList() {
         List<RecentSearch> list = new ArrayList<>();
-        list.add(new RecentSearch(R.drawable.cruel_summer_image, "Cruel Summer", "Bài hát", getString(R.string.middleDot) + "Taylor Swift"));
-        list.add(new RecentSearch(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Bài hát", getString(R.string.middleDot) + "Sơn Tùng MTP"));
-        list.add(new RecentSearch(R.drawable.thuan_podcast_image, "Thuần", "Podcast", getString(R.string.middleDot) + "Thuần Podcast"));
-        list.add(new RecentSearch(R.drawable.a_loi_image, "À lôi", "Bài hát", getString(R.string.middleDot) + "Double2T, Masew"));
-        list.add(new RecentSearch(R.drawable.ariana_grande_image, "Ariana Grande", "Nghệ sĩ", null));
-        list.add(new RecentSearch(R.drawable.taylor_swift_image, "Taylor Swift", "Nghệ sĩ", null));
+//        list.add(new RecentSearch(R.drawable.cruel_summer_image, "Cruel Summer", "Bài hát", getString(R.string.middleDot) + "Taylor Swift"));
+//        list.add(new RecentSearch(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Bài hát", getString(R.string.middleDot) + "Sơn Tùng MTP"));
+//        list.add(new RecentSearch(R.drawable.thuan_podcast_image, "Thuần", "Podcast", getString(R.string.middleDot) + "Thuần Podcast"));
+//        list.add(new RecentSearch(R.drawable.a_loi_image, "À lôi", "Bài hát", getString(R.string.middleDot) + "Double2T, Masew"));
+//        list.add(new RecentSearch(R.drawable.ariana_grande_image, "Ariana Grande", "Nghệ sĩ", null));
+//        list.add(new RecentSearch(R.drawable.taylor_swift_image, "Taylor Swift", "Nghệ sĩ", null));
         return list;
     }
 }

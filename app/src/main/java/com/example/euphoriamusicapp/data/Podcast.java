@@ -1,13 +1,31 @@
 package com.example.euphoriamusicapp.data;
 
-public class Podcast {
-    private int resourceId;
-    private String podcastName, authorName;
+import java.io.Serializable;
 
-    public Podcast(int resourceId, String podcastName, String authorName) {
+public class Podcast implements Serializable {
+
+    private int resourceId;
+    private String authorname;
+    private int count;
+    private boolean featured;
+    private String image;
+    private boolean latest;
+    private String podcastName;
+    private String  url;
+
+    public Podcast() {
+
+    }
+
+    public Podcast(int resourceId, String authorname, int count, boolean featured, String image, boolean latest, String podcastName, String url) {
         this.resourceId = resourceId;
+        this.authorname = authorname;
+        this.count = count;
+        this.featured = featured;
+        this.image = image;
+        this.latest = latest;
         this.podcastName = podcastName;
-        this.authorName = authorName;
+        this.url = url;
     }
 
     public int getResourceId() {
@@ -18,6 +36,46 @@ public class Podcast {
         this.resourceId = resourceId;
     }
 
+    public String getAuthorname() {
+        return authorname;
+    }
+
+    public void setAuthorname(String authorname) {
+        this.authorname = authorname;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
+    }
+
     public String getPodcastName() {
         return podcastName;
     }
@@ -26,11 +84,11 @@ public class Podcast {
         this.podcastName = podcastName;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getUrl() {
+        return url;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

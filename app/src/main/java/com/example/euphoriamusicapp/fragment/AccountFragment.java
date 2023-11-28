@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
+import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.WelcomeActivity;
 import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
@@ -111,6 +112,10 @@ public class AccountFragment extends Fragment {
         tvLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying())
+                {
+                    PlayMusicActivity.mediaPlayer.stop();
+                }
                 mAuth.signOut();
                 Intent intent = new Intent();
                 intent.setClass(getActivity(),MainActivity.class);

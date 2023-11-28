@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -172,13 +173,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         if(task.isSuccessful()){
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            HashMap<String,Object> map = new HashMap<>();
-                            map.put("id",user.getUid());
-                            map.put("name",user.getDisplayName());
-                            map.put("email",user.getEmail());
-                            map.put("profile",user.getPhotoUrl().toString());
-                            database.getReference().child("users").child(user.getUid()).setValue(map);
                             Intent intent = new Intent(MainActivity.this,SliderActivity.class);
                             startActivity(intent);
                         }else {
@@ -197,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SignInWithFirebase() {
-        if(!edtEmail.getText().toString().matches("^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@+^[a-zA-Z0-9.-]+$")){
+        if(Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()){
             mAuth.signInWithEmailAndPassword(edtEmail.getText().toString(),editPass.getText().toString())
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override

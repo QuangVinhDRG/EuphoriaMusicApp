@@ -1,9 +1,20 @@
 package com.example.euphoriamusicapp.data;
 
-public class BasicMusicInformation {
+import java.io.Serializable;
+
+public class BasicMusicInformation implements  Serializable{
     private int resourceId;
     private String songName;
     private String authorName;
+    private String image;
+    private String url;
+
+    private boolean latest;
+    private boolean featured;
+    private int count;
+    private  int id_catolary;
+
+
 
     public BasicMusicInformation() {
     }
@@ -12,6 +23,18 @@ public class BasicMusicInformation {
         this.resourceId = resourceId;
         this.songName = songName;
         this.authorName = authorName;
+    }
+
+    public BasicMusicInformation(int resourceId, String songName, String authorName, String image, String url, boolean latest, boolean featured, int count, int id_catalory) {
+        this.resourceId = resourceId;
+        this.songName = songName;
+        this.authorName = authorName;
+        this.image = image;
+        this.url = url;
+        this.latest = latest;
+        this.featured = featured;
+        this.count = count;
+        this.id_catolary = id_catalory;
     }
 
     public int getResourceId() {
@@ -36,5 +59,68 @@ public class BasicMusicInformation {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public boolean isLatest() {
+        return latest;
+    }
+
+    public void setLatest(boolean latest) {
+        this.latest = latest;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getId_catalory() {
+        return id_catolary;
+    }
+
+    public void setId_catalory(int id_catalory) {
+        this.id_catolary = id_catalory;
+    }
+
+    @Override
+    public String toString() {
+        return "BasicMusicInformation{" +
+                "resourceId=" + resourceId +
+                ", songName='" + songName + '\'' +
+                ", authorName='" + authorName + '\'' +
+                ", image='" + image + '\'' +
+                ", url='" + url + '\'' +
+                ", latest=" + latest +
+                ", featured=" + featured +
+                ", count=" + count +
+                ", id_catolary=" + id_catolary +
+                '}';
     }
 }

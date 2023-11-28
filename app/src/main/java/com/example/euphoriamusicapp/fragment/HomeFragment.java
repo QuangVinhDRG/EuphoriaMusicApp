@@ -2,6 +2,7 @@ package com.example.euphoriamusicapp.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.ExploreAdapter;
@@ -30,6 +33,11 @@ import com.example.euphoriamusicapp.data.Podcast;
 import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.TopicAndCategory;
 import com.example.euphoriamusicapp.data.TrendingArtist;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +66,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView rvHotAlbum;
     private RecyclerView rvTopicCategory;
     private ViewPager2 vp2HomeSlider;
+
     private List<ImageOfMusic> homeSliderList;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
@@ -101,6 +110,7 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -118,6 +128,7 @@ public class HomeFragment extends Fragment {
         rvHotAlbum = view.findViewById(R.id.rvHotAlbum);
         rvTopicCategory = view.findViewById(R.id.rvTopicCategory);
 
+
         homeSliderList = getHomeSliderList();
         HomeSliderAdapter homeSliderAdapter = new HomeSliderAdapter(homeSliderList);
         vp2HomeSlider.setAdapter(homeSliderAdapter);
@@ -130,10 +141,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        LinearLayoutManager layoutManagerRecentListen = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvRecentListen.setLayoutManager(layoutManagerRecentListen);
-        rvRecentListen.setHasFixedSize(true);
-        rvRecentListen.setAdapter(new RecentListenAdapter(getRecentListenList()));
+        getRecentListenList();
 
         LinearLayoutManager layoutManagerExplore = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvExplore.setLayoutManager(layoutManagerExplore);
@@ -150,10 +158,7 @@ public class HomeFragment extends Fragment {
         rvNewRelease.setHasFixedSize(true);
         rvNewRelease.setAdapter(new NewReleaseAdapter(getNewReleaseList()));
 
-        LinearLayoutManager layoutManagerPodcast = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvPodcast.setLayoutManager(layoutManagerPodcast);
-        rvPodcast.setHasFixedSize(true);
-        rvPodcast.setAdapter(new PodcastAdapter(getPodcastList()));
+       getPodcastList();
 
         LinearLayoutManager layoutManagerTrendingArtist = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrendingArtist.setLayoutManager(layoutManagerTrendingArtist);
@@ -180,15 +185,29 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
-    private List<BasicMusicInformation> getRecentListenList() {
-        List<BasicMusicInformation> list = new ArrayList<>();
-        list.add(new BasicMusicInformation(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Sơn Tùng MTP"));
-        list.add(new BasicMusicInformation(R.drawable.cruel_summer_image, "Cruel Summer", "Taylor Swift"));
-        list.add(new BasicMusicInformation(R.drawable.khoc_o_trong_club_image, "Khóc ở trong club", "Hiền Hồ"));
-        list.add(new BasicMusicInformation(R.drawable.kill_this_love_image, "Kill This Love", "BLACKPINK"));
-        list.add(new BasicMusicInformation(R.drawable.neu_luc_do_image, "Nếu lúc đó", "tlinh, 2pillz"));
-        list.add(new BasicMusicInformation(R.drawable.vai_cau_noi_co_khien_nguoi_thay_doi_image, "Vài câu nói có...", "GreyD, tlinh"));
-        return list;
+    private void getRecentListenList() {
+        LinearLayoutManager layoutManagerRecentListen = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvRecentListen.setLayoutManager(layoutManagerRecentListen);
+        rvRecentListen.setHasFixedSize(true);
+        List<BasicMusicInformation> listSong = new ArrayList<>();
+        FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        databaseReference.child("songs").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data: snapshot.getChildren()) {
+                    BasicMusicInformation  song = data.getValue(BasicMusicInformation.class);
+                    listSong.add(song);
+                }
+                rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private List<ImageOfMusic> getExploreList() {
@@ -226,12 +245,29 @@ public class HomeFragment extends Fragment {
     }
 
     private List<Podcast> getPodcastList() {
-        List<Podcast> list = new ArrayList<>();
-        list.add(new Podcast(R.drawable.may_podcast_image, "MÂY Podcast", "MÂY Podcast"));
-        list.add(new Podcast(R.drawable.viet_chua_lanh_podcast_image, "Viết Chữa Lành", "Writing therapy"));
-        list.add(new Podcast(R.drawable.sunhuyn_podcast_image, "Sunhuyn Podcast", "Sunhuyn"));
-        list.add(new Podcast(R.drawable.dap_chan_nam_nghe_tun_ke_image, "Đắp Chăn Nằm Nghe...", "Tun Cảm Ơn"));
-        return list;
+        LinearLayoutManager layoutManagerPodcast = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvPodcast.setLayoutManager(layoutManagerPodcast);
+        rvPodcast.setHasFixedSize(true);
+        List<Podcast> listPodcast = new ArrayList<>();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference();
+        databaseReference.child("podcast").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Podcast podcast = data.getValue(Podcast.class);
+                    listPodcast.add(podcast);
+                }
+                rvPodcast.setAdapter(new PodcastAdapter(getContext(),listPodcast));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return listPodcast;
     }
 
     private List<TrendingArtist> getTrendingArtistList() {
