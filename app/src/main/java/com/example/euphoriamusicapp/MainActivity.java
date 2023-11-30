@@ -7,13 +7,17 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView btnloginGG,btnloginGitHub,btnloginfb;
     TextView tvSignUp, tvForgotPassword;
+    ImageButton ibShowHidePassword;
 
     EditText edtEmail,editPass;
     private FirebaseAuth mAuth;
     private static  final int RC_SIGN_IN = 11;
-    private static final String TAG  = "GOOGLEAUTH";
+    private static final String TAG  = "GOOGLEAUTH12";
 
     private GoogleSignInClient mClient;
     private FirebaseDatabase database;
@@ -67,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
         btnloginGG = findViewById(R.id.btnLoginWithGoogle);
         btnloginGitHub = findViewById(R.id.btnLoginWithGithub);
         btnloginfb = findViewById(R.id.btnLoginWithfb);
+        ibShowHidePassword = findViewById(R.id.ibShowHidePassword);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
         //Auth
         mAuth = FirebaseAuth.getInstance();
+
 
         //CONFIGURE GG
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -81,6 +88,19 @@ public class MainActivity extends AppCompatActivity {
 
         //database
         database = FirebaseDatabase.getInstance();
+        ibShowHidePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(editPass.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
+                    editPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    ibShowHidePassword.setImageResource(R.drawable.hide_password_24);
+                }else{
+                    editPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    ibShowHidePassword.setImageResource(R.drawable.show);
+                }
+            }
+        });
+
 
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

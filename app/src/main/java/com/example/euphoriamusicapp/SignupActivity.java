@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +31,8 @@ public class SignupActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private EditText confirmpassword;
+    private  ImageButton ibHideShowpass1,ibHideShowpass2;
+
 
     private Button btn_SinUp;
     private FirebaseAuth mAuth;
@@ -42,10 +46,46 @@ public class SignupActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        ibHideShowpass1 = findViewById(R.id.ibShowHidePassword1);
+        ibHideShowpass2 = findViewById(R.id.ibShowHideRePassword2);
         confirmpassword = findViewById(R.id.confirmpassword);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        ibHideShowpass1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ibHideShowpass1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(password.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
+                            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            ibHideShowpass1.setImageResource(R.drawable.hide_password_24);
+                        }else{
+                            password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                            ibHideShowpass1.setImageResource(R.drawable.show);
+                        }
+                    }
+                });
+            }
+        });
+        ibHideShowpass2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ibHideShowpass2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(confirmpassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
+                            confirmpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            ibHideShowpass2.setImageResource(R.drawable.show);
+                        }else{
+                            confirmpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                            ibHideShowpass2.setImageResource(R.drawable.hide_password_24);
+                        }
+                    }
+                });
+            }
+        });
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

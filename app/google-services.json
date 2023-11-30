@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "506283952383",
+    "firebase_url": "https://euphoriaappmusic-default-rtdb.firebaseio.com",
     "project_id": "euphoriaappmusic",
     "storage_bucket": "euphoriaappmusic.appspot.com"
   },
@@ -14,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "506283952383-aig880s9f2sl2c418o42r9r2bbnd.apps.googleusercontent.com",
+          "client_id": "506283952383-oq2lr5skh7q0m5cds8jc3o6i8jnu1ef1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.euphoriamusicapp",
-            "certificate_hash": "b2ae97a8189ea286371cd0507db5d47230778bfd"
+            "certificate_hash": "28c18b0efdbb45c57c8fd9591201cd90f4b0b93e"
           }
         },
         {

@@ -24,7 +24,7 @@ import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import java.util.List;
 
 public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapter.RecentListenViewHolder>{
-    private List<BasicMusicInformation> basicMusicInformationList;
+    public static List<BasicMusicInformation> basicMusicInformationList;
     private Context mContext;
 
     public RecentListenAdapter(Context context,List<BasicMusicInformation> recentListenList) {
@@ -45,6 +45,7 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
     @Override
     public void onBindViewHolder(@NonNull RecentListenViewHolder holder, int position) {
         BasicMusicInformation basicMusicInformation = basicMusicInformationList.get(position);
+
         if (basicMusicInformation == null) {
             return;
         } else {

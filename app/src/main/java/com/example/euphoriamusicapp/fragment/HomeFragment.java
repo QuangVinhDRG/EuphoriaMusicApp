@@ -195,6 +195,9 @@ public class HomeFragment extends Fragment {
         databaseReference.child("songs").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(listSong != null){
+                    listSong.clear();
+                }
                 for (DataSnapshot data: snapshot.getChildren()) {
                     BasicMusicInformation  song = data.getValue(BasicMusicInformation.class);
                     listSong.add(song);

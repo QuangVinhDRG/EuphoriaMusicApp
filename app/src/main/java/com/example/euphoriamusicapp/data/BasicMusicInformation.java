@@ -12,17 +12,18 @@ public class BasicMusicInformation implements  Serializable{
     private boolean latest;
     private boolean featured;
     private int count;
-    private  int id_catolary;
 
 
 
     public BasicMusicInformation() {
     }
 
-    public BasicMusicInformation(int resourceId, String songName, String authorName) {
+    public BasicMusicInformation(int resourceId, String songName, String authorName, String image,String url) {
         this.resourceId = resourceId;
         this.songName = songName;
         this.authorName = authorName;
+        this.image = image;
+        this.url = url;
     }
 
     public BasicMusicInformation(int resourceId, String songName, String authorName, String image, String url, boolean latest, boolean featured, int count, int id_catalory) {
@@ -34,7 +35,7 @@ public class BasicMusicInformation implements  Serializable{
         this.latest = latest;
         this.featured = featured;
         this.count = count;
-        this.id_catolary = id_catalory;
+
     }
 
     public int getResourceId() {
@@ -101,13 +102,7 @@ public class BasicMusicInformation implements  Serializable{
         this.count = count;
     }
 
-    public int getId_catalory() {
-        return id_catolary;
-    }
 
-    public void setId_catalory(int id_catalory) {
-        this.id_catolary = id_catalory;
-    }
 
     @Override
     public String toString() {
@@ -120,7 +115,6 @@ public class BasicMusicInformation implements  Serializable{
                 ", latest=" + latest +
                 ", featured=" + featured +
                 ", count=" + count +
-                ", id_catolary=" + id_catolary +
                 '}';
     }
 }

@@ -60,32 +60,56 @@
             android:inputType="textEmailAddress"
             android:paddingStart="20dp" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="360dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/login_signup_input_box"
-            android:backgroundTint="@null"
-            android:drawableEnd="@drawable/hide_password_24"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="360dp"
+                android:layout_height="55dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/login_signup_input_box"
+                android:backgroundTint="@null"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"/>
+            <ImageButton
+                android:id="@+id/ibShowHidePassword1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/hide_password_24"
+                android:background="@null"
+                android:layout_toRightOf="@id/password"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="-40dp"/>
+        </RelativeLayout>
 
-        <EditText
-            android:id="@+id/confirmpassword"
-            android:layout_width="360dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/login_signup_input_box"
-            android:backgroundTint="@null"
-            android:drawableEnd="@drawable/hide_password_24"
-            android:hint="Re - Password"
-            android:inputType="textPassword"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/confirmpassword"
+                android:layout_width="360dp"
+                android:layout_height="55dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/login_signup_input_box"
+                android:backgroundTint="@null"
+                android:hint="Re - Password"
+                android:inputType="textPassword"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"/>
+            <ImageButton
+                android:id="@+id/ibShowHideRePassword2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/hide_password_24"
+                android:background="@null"
+                android:layout_toRightOf="@id/confirmpassword"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="-40dp"/>
+        </RelativeLayout>
 
         <android.widget.Button
             android:id="@+id/btnSignUp"

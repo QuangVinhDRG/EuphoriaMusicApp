@@ -22,7 +22,7 @@ import com.example.euphoriamusicapp.data.Podcast;
 import java.util.List;
 
 public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder> {
-    private List<Podcast> podcastList;
+    public static List<Podcast> podcastList;
     private Context mContext;
 
     public PodcastAdapter(Context Context,List<Podcast> podcastList) {

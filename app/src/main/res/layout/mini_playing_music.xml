@@ -61,11 +61,12 @@
                 android:scaleType="centerCrop"
                 android:layout_marginTop="2dp"/>
             <ImageButton
+                android:id="@+id/ibPlayminimusic"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:background="@null"
-                android:src="@drawable/play_icon"
+                android:src="@drawable/pause_button"
                 android:scaleType="centerCrop"/>
         </LinearLayout>
     </LinearLayout>

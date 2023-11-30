@@ -92,15 +92,7 @@ public class SongFragment extends Fragment {
 
     public List<BasicMusicInformation> getFavouriteMusicList() {
         List<BasicMusicInformation> list = new ArrayList<>();
-        list.add(new BasicMusicInformation(R.drawable.cruel_summer_image,"Cruel Summer", "Taylor Swift"));
-        list.add(new BasicMusicInformation(R.drawable.cat_doi_noi_sau_image, "Cắt Đôi Nỗi Sầu", "Tăng Duy Tân, Drum7"));
-        list.add(new BasicMusicInformation(R.drawable.tat_ca_hoac_khong_la_gi_ca_image,  "Tất Cả Hoặc Không Là Gì Cả", "Cao Thái Sơn, Đông Thiên Đức"));
-        list.add(new BasicMusicInformation(R.drawable.le_luu_ly_image, "Lệ Lưu Ly", "Vũ Phụng Tiên, DT Tập Rap"));
-        list.add(new BasicMusicInformation(R.drawable.sao_troi_lam_gio_image,  "Sao Trời Làm Gió", "Nal, CT"));
-        list.add(new BasicMusicInformation(R.drawable.anh_dau_muon_thay_em_buon_image,  "Anh Đâu Muốn Thấy Em Buồn", "Châu Khải Phong, ACV"));
-        list.add(new BasicMusicInformation(R.drawable.can_tinh_nhu_the_image,  "Cạn Tình Như Thế", "DICKSON, Thành Đạt, Lê Chí Trung"));
-        list.add(new BasicMusicInformation(R.drawable.dai_minh_tinh_image,"Đại Minh Tinh", "Văn Mai Hương, Hứa Kim Tuyền"));
-        list.add(new BasicMusicInformation(R.drawable.ngay_mai_nguoi_ta_lay_chong_image, "Ngày Mai Người Ta Lấy Chồng", "Thành Đạt"));
+
         return list;
     }
 }

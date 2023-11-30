@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.euphoriamusicapp.Admin.UpLoadSong;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,6 +22,8 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+//        Intent intent = new Intent(WelcomeActivity.this, UpLoadSong.class);
+//          startActivity(intent);
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             Intent intent = new Intent(WelcomeActivity.this, MainAppActivity.class);

@@ -8,6 +8,10 @@ public class TopicAndCategory {
         this.resourceId = resourceId;
         TopicAndCategoryName = topicAndCategoryName;
     }
+    public TopicAndCategory() {
+
+    }
+
 
     public int getResourceId() {
         return resourceId;

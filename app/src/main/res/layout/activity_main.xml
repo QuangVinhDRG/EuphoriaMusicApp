@@ -118,18 +118,30 @@
                 android:layout_marginTop="20dp"
                 android:paddingBottom="10dp"/>
 
-            <EditText
-                android:id="@+id/edtpass"
-                android:layout_width="360dp"
-                android:layout_height="55dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/login_signup_input_box"
-                android:backgroundTint="@null"
-                android:drawableEnd="@drawable/hide_password_24"
-                android:hint="Enter your password"
-                android:inputType="textPassword"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/edtpass"
+                    android:layout_width="360dp"
+                    android:layout_height="55dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/login_signup_input_box"
+                    android:backgroundTint="@null"
+                    android:hint="Enter your password"
+                    android:inputType="textPassword"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp" />
+                <ImageButton
+                    android:id="@+id/ibShowHidePassword"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/hide_password_24"
+                    android:background="@null"
+                    android:layout_toRightOf="@id/edtpass"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="-40dp"/>
+            </RelativeLayout>
         </LinearLayout>
         <TextView
             android:id="@+id/tvForgotPassword"
