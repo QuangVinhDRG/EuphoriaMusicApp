@@ -213,7 +213,6 @@ public class MainAppActivity extends AppCompatActivity {
                 }else{
                     bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
                 }
-                Log.d("e3333e", "onCreate: lỗiiii");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

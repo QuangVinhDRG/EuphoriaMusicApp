@@ -264,10 +264,8 @@ public class HomeFragment extends Fragment {
                 rvPodcast.setAdapter(new PodcastAdapter(getContext(),listPodcast));
 
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
         return listPodcast;

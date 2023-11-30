@@ -181,6 +181,7 @@ public class SignupActivity extends AppCompatActivity {
                                     map.put("name",username.getText().toString());
                                     map.put("email",user.getEmail());
                                     map.put("profile",getString(R.string.avatar_default));
+                                    map.put("isAdmin",0);
                                     database.getReference().child("users").child(user.getUid()).setValue(map);
                                     Intent intent = new Intent(SignupActivity.this,MainActivity.class);
                                     startActivity(intent);

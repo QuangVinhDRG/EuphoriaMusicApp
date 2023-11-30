@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.PodcastAdapter;
 import com.example.euphoriamusicapp.data.BasicMusicInformation;
@@ -34,6 +35,7 @@ import com.example.euphoriamusicapp.data.Podcast;
 import com.example.euphoriamusicapp.data.TopicAndCategory;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,17 +48,21 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.euphoriamusicapp.R;
 
 public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-
+    final  static  String IMAGE = "IMAGE";
+    final  static  String AUDIO = "AUDIO";
     TextView textViewImage;
     ProgressBar progressBar;
     Uri audioUri ;
+    Button logout;
     StorageReference mStorageref;
     StorageTask mUploadsTask ;
     DatabaseReference referenceSongs ;
@@ -67,7 +73,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
     TextView title, artist,album;
     ImageView album_art ;
     int positon_ca = 1;
-    Uri uri_image,uri_audio;
+    String uri_image = "",uri_audio = "";
 
 
 
@@ -76,14 +82,12 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_load_song);
 
-
+        logout = findViewById(R.id.logout);
         textViewImage = findViewById(R.id.textViewSongsFilesSelected);
         progressBar = findViewById(R.id.progressbar);
         title = findViewById(R.id.title);
         artist = findViewById(R.id.artist);
-        album = findViewById(R.id.album);
         album_art = findViewById(R.id.imageview);
-
         metadataRetriever = new MediaMetadataRetriever();
         referenceSongs = FirebaseDatabase.getInstance().getReference().child("songs");
         mStorageref = FirebaseStorage.getInstance().getReference().child("songs");
@@ -116,6 +120,15 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             }
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                Intent intent = new Intent(UpLoadSong.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -151,24 +164,11 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             textViewImage.setText(fileNames);
             metadataRetriever.setDataSource(this,audioUri);
 
-            StorageReference storageReference = mStorageref.child(System.currentTimeMillis()+".png");
+
             art = metadataRetriever.getEmbeddedPicture();
             Bitmap bitmap = BitmapFactory.decodeByteArray(art,0,art.length);
             album_art.setImageBitmap(bitmap);
-            UploadTask uploadTask = storageReference.putBytes(art);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(UpLoadSong.this, "Upload image lỗi", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    uri_image = taskSnapshot.getUploadSessionUri();
-                }
-            });
-
-
+            uploadImage(art);
 
             artist.setText(metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
             title.setText(metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
@@ -236,14 +236,23 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
         if(audioUri != null){
             Toast.makeText(this, "uploads please wait!", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.VISIBLE);
-            final  StorageReference storageReference = mStorageref.child(System.currentTimeMillis()+"."+getfileextension(audioUri));
+            StorageReference storageReference = mStorageref.child(System.currentTimeMillis()+"."+getfileextension(audioUri));
             mUploadsTask = storageReference.putFile(audioUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    uri_audio = taskSnapshot.getUploadSessionUri();
-                    BasicMusicInformation uploadSong = new BasicMusicInformation(positon_ca,title.getText().toString(),artist.getText().toString(),uri_image.toString(),uri_audio.toString());
-                    String path = referenceSongs.push().getKey();
-                    referenceSongs.child(path).setValue(uploadSong);
+                    storageReference.getDownloadUrl()
+                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    coppyuri(uri,AUDIO);
+                                    Log.d("ffffff", "onFailure: "+uri);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
                             }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -253,7 +262,13 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
                     progressBar.setProgress((int) progess);
 
                 }
-            });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("gghe", "onFailure: "+e.getMessage());
+                }
+            })
+            ;
 
         }else {
             Toast.makeText(this, "No file Selected to uploads", Toast.LENGTH_SHORT).show();
@@ -271,6 +286,92 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(audioUri));
 
+    }
+    private void uploadImage(byte[] imageData) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        mStorageref = storage.getReference();
+        if (imageData != null) {
+            // Tạo một StorageReference với tên file duy nhất (ví dụ: timestamp)
+            StorageReference fileReference = mStorageref.child(System.currentTimeMillis() + ".jpg");
+
+            // Tạo một ByteArrayOutputStream để chuyển đổi byte array thành dạng dữ liệu cần thiết để tải lên
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            baos.write(imageData, 0, imageData.length);
+
+            // Tải ảnh lên Firebase Storage
+            fileReference.putBytes(baos.toByteArray())
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            fileReference.getDownloadUrl()
+                                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    coppyuri(uri,IMAGE);
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Xử lý khi không thể lấy đường dẫn (URL)
+                                            Toast.makeText(UpLoadSong.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            Toast.makeText(UpLoadSong.this, "Tải ảnh lên thành công", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Xử lý khi tải lên thất bại
+                            Toast.makeText(UpLoadSong.this, "Lỗi khi tải ảnh lên: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "Không tìm thấy ảnh để tải lên", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void coppyuri( Uri uri,String type) {
+        if(type.equals(IMAGE)){
+            uri_image = uri.toString();
+        }else{
+            uri_audio = uri.toString();
+        }
+       if( uri_audio != "" &&  uri_image != ""){
+           List<BasicMusicInformation> listSong = new ArrayList<>();
+           FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
+           DatabaseReference databaseReference = firebaseDatabase.getReference();
+           databaseReference.child("songs").addListenerForSingleValueEvent(new ValueEventListener() {
+               @Override
+               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                   if(listSong != null){
+                       listSong.clear();
+                   }
+                   for (DataSnapshot data: snapshot.getChildren()) {
+                       BasicMusicInformation  song = data.getValue(BasicMusicInformation.class);
+                       listSong.add(song);
+                   }
+                   putDataToRealTimeDatabase(listSong.size() + 1,uri_image,uri_audio);
+
+               }
+               @Override
+               public void onCancelled(@NonNull DatabaseError error) {
+               }
+           });
+
+       }
+    }
+
+    private void putDataToRealTimeDatabase(int size,String uri_image1, String uri_audio1) {
+        BasicMusicInformation uploadSong = new BasicMusicInformation(positon_ca,title.getText().toString(),artist.getText().toString(),uri_image1,uri_audio1,false,true,0);
+        referenceSongs.child(String.valueOf(size)).setValue(uploadSong);
+        FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference data =  firebaseDatabase.getReference("songs");
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("latest", true);
+        data.child(String.valueOf(size-1)).updateChildren(result);
+        uri_audio = "" ;
+        uri_image = "";
     }
 
 

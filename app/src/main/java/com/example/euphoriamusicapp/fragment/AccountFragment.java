@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.MainActivity;
@@ -21,9 +24,15 @@ import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.WelcomeActivity;
+import com.example.euphoriamusicapp.data.user;
 import com.example.euphoriamusicapp.fragment.account.MemberListFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,15 +136,32 @@ public class AccountFragment extends Fragment {
     }
 
     private void ShowInfor() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String name = user.getDisplayName();
-            Uri photoUrl = user.getPhotoUrl();
+        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
 
-            username.setText(user.getDisplayName());
+        if (u != null) {
+           if(u.getDisplayName() == null){
+               FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+               DatabaseReference databaseReference = firebaseDatabase.getReference();
+               databaseReference.child("users").child(u.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       user uu = snapshot.getValue(user.class);
+                       String photoUrl = uu.getProfile();
+                       Log.d("dddddd", "onDataChange: " + uu.getName());
+                       username.setText(uu.getName());
+                       Glide.with(getContext()).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
+                   }
+
+                   @Override
+                   public void onCancelled(@NonNull DatabaseError error) {
+
+                   }
+               });
+           }
+            Uri photoUrl = u.getPhotoUrl();
+            username.setText(u.getDisplayName());
             Glide.with(this).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
         }
+
     }
-
-
 }

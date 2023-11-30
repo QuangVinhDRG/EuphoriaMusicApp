@@ -26,7 +26,7 @@ public class BasicMusicInformation implements  Serializable{
         this.url = url;
     }
 
-    public BasicMusicInformation(int resourceId, String songName, String authorName, String image, String url, boolean latest, boolean featured, int count, int id_catalory) {
+    public BasicMusicInformation(int resourceId, String songName, String authorName, String image, String url, boolean latest, boolean featured, int count) {
         this.resourceId = resourceId;
         this.songName = songName;
         this.authorName = authorName;
