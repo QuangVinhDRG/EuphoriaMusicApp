@@ -130,11 +130,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tìm kiếm gần đây"
+            android:text="Danh sách kết quả"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/pinkColor"/>
         <TextView
+            android:id="@+id/DeleteAll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="XÓA"

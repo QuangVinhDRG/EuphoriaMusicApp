@@ -33,6 +33,7 @@ public class Loginwithgithub extends AppCompatActivity {
     private FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginwithgithub);
         email = findViewById(R.id.edtEmail);

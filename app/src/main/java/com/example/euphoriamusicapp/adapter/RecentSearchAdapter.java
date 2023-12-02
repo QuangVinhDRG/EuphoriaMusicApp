@@ -7,15 +7,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.RecentSearch;
 
 import java.util.List;
 
 public class RecentSearchAdapter extends BaseAdapter {
-    private List<RecentSearch> recentSearchList;
+    private List<BasicMusicInformation> recentSearchList;
 
-    public RecentSearchAdapter(List<RecentSearch> recentSearchList) {
+    public RecentSearchAdapter(List<BasicMusicInformation> recentSearchList) {
         this.recentSearchList = recentSearchList;
     }
 
@@ -39,13 +41,16 @@ public class RecentSearchAdapter extends BaseAdapter {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recent_search_item, parent, false);
         ImageView ivRecentSearch = view.findViewById(R.id.ivRecentSearch);
         TextView tvSearchContent = view.findViewById(R.id.tvRecentSearchContent);
-        TextView tvSearchType = view.findViewById(R.id.tvRecentSearchType);
+
         TextView tvSearchArtist = view.findViewById(R.id.tvRecentSearchArtist);
-        RecentSearch recentSearch = recentSearchList.get(position);
-        ivRecentSearch.setImageResource(recentSearch.getResourceId());
-        tvSearchContent.setText(recentSearch.getSearchContent());
-        tvSearchType.setText(recentSearch.getSearchType());
-        tvSearchArtist.setText(recentSearch.getSearchArtist());
+
+        BasicMusicInformation BasicMusicInformation = recentSearchList.get(position);
+        Glide
+                .with(ivRecentSearch)
+                .load(BasicMusicInformation.getImage())
+                .into(ivRecentSearch);
+        tvSearchContent.setText(BasicMusicInformation.getSongName());
+        tvSearchArtist.setText(BasicMusicInformation.getAuthorName());
         return view;
     }
 }

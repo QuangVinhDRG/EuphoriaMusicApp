@@ -14,13 +14,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.euphoriamusicapp.data.user;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.integrity.e;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
@@ -70,17 +77,47 @@ public class ResetPasswordEmailActivity extends AppCompatActivity {
 
     private void Resetpassword() {
         if(Patterns.EMAIL_ADDRESS.matcher(edtEmail.getText().toString()).matches()){
-            mAuth.sendPasswordResetEmail(edtEmail.getText().toString())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Intent intent = new Intent(ResetPasswordEmailActivity.this,ResetPasswordSuccessActivity.class);
-                            startActivity(intent);
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference();
+            databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    boolean Ischeck = false;
+                    for ( DataSnapshot data : snapshot.getChildren()) {
+                        user tuancho =  data.getValue(user.class);
+                        if(tuancho.getEmail()==edtEmail.getText().toString())
+                        {
+                            Ischeck = true;
+                            break;
                         }
-                    });
-        }else {
-            edtEmail.setError("Invalid Email Pattern!");
-            btnConfirm.setEnabled(true);
+                    }
+                    if( Ischeck){
+                        mAuth.sendPasswordResetEmail(edtEmail.getText().toString())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Intent intent = new Intent(ResetPasswordEmailActivity.this,ResetPasswordSuccessActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ResetPasswordEmailActivity.this, "Your email does not exist", Toast.LENGTH_SHORT).show();
+                                        btnConfirm.setEnabled(true);
+                                    }
+                                });
+                    }else {
+                        edtEmail.setError("Invalid Email Pattern!");
+                        btnConfirm.setEnabled(true);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
         }
     }
 

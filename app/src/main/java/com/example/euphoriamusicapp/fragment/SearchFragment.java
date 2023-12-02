@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +17,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.adapter.RecentSearchAdapter;
+import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.RecentSearch;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +51,8 @@ public class SearchFragment extends Fragment {
     private ListView lvRecentSearch;
     private View view;
     private EditText etSearch;
-
+    private TextView DeleteAll;
+    List<BasicMusicInformation> list = new ArrayList<>();
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -77,9 +90,17 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_search, container, false);
         lvRecentSearch = view.findViewById(R.id.lvRecentSearch);
-        RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(getRecentSearchList());
-        lvRecentSearch.setAdapter(recentSearchAdapter);
         etSearch = view.findViewById(R.id.etSearch);
+        DeleteAll = view.findViewById(R.id.DeleteAll);
+        DeleteAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(list != null){
+                    list.clear();
+                    lvRecentSearch.deferNotifyDataSetChanged();
+                }
+            }
+        });
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -89,17 +110,58 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                getRecentSearchList(etSearch.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return view;
     }
 
-    private List<RecentSearch> getRecentSearchList() {
-        List<RecentSearch> list = new ArrayList<>();
-//        list.add(new RecentSearch(R.drawable.cruel_summer_image, "Cruel Summer", "Bài hát", getString(R.string.middleDot) + "Taylor Swift"));
-//        list.add(new RecentSearch(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Bài hát", getString(R.string.middleDot) + "Sơn Tùng MTP"));
-//        list.add(new RecentSearch(R.drawable.thuan_podcast_image, "Thuần", "Podcast", getString(R.string.middleDot) + "Thuần Podcast"));
-//        list.add(new RecentSearch(R.drawable.a_loi_image, "À lôi", "Bài hát", getString(R.string.middleDot) + "Double2T, Masew"));
-//        list.add(new RecentSearch(R.drawable.ariana_grande_image, "Ariana Grande", "Nghệ sĩ", null));
-//        list.add(new RecentSearch(R.drawable.taylor_swift_image, "Taylor Swift", "Nghệ sĩ", null));
-        return list;
+    private void getRecentSearchList(String key) {
+
+        if(!key.isEmpty()){
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference();
+            databaseReference.child("songs").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(list != null){
+                        list.clear();
+                    }
+                    for (DataSnapshot data: snapshot.getChildren()) {
+                        BasicMusicInformation song = data.getValue(BasicMusicInformation.class);
+                        if(song.getSongName().contains(key)){
+                            list.add(song);
+                        }
+
+                    }
+                    RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(list);
+                    lvRecentSearch.setAdapter(recentSearchAdapter);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }else{
+            if(list != null){
+                list.clear();
+            }
+            RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(list);
+            lvRecentSearch.setAdapter(recentSearchAdapter);
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.NewReleaseMusic;
 
@@ -34,10 +35,12 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Ne
         if (newReleaseMusic == null) {
             return;
         } else {
-            holder.ivNewRelease.setImageResource(newReleaseMusic.getResourceId());
+            Glide
+                    .with(holder.ivNewRelease)
+                    .load(newReleaseMusic.getImage())
+                    .into(holder.ivNewRelease);
             holder.tvNewReleaseSongName.setText(newReleaseMusic.getSongName());
             holder.tvNewReleaseAuthorName.setText(newReleaseMusic.getAuthorName());
-            holder.tvNewReleaseTime.setText(newReleaseMusic.getTimeRelease());
         }
     }
 
@@ -54,7 +57,7 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Ne
             ivNewRelease = itemView.findViewById(R.id.ivNewRelease);
             tvNewReleaseSongName = itemView.findViewById(R.id.tvNewReleaseSongName);
             tvNewReleaseAuthorName = itemView.findViewById(R.id.tvNewReleaseAuthorName);
-            tvNewReleaseTime = itemView.findViewById(R.id.tvNewReleaseTime);
+
         }
     }
 }

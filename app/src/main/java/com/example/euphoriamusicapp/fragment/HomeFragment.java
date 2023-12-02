@@ -37,6 +37,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -153,12 +154,9 @@ public class HomeFragment extends Fragment {
         rvForYou.setHasFixedSize(true);
         rvForYou.setAdapter(new ForYouAdapter(getForYouList()));
 
-        GridLayoutManager layoutManagerNewRelease = new GridLayoutManager(getContext(), 3, LinearLayoutManager.HORIZONTAL, false);
-        rvNewRelease.setLayoutManager(layoutManagerNewRelease);
-        rvNewRelease.setHasFixedSize(true);
-        rvNewRelease.setAdapter(new NewReleaseAdapter(getNewReleaseList()));
+        getNewReleaseList();
 
-       getPodcastList();
+        getPodcastList();
 
         LinearLayoutManager layoutManagerTrendingArtist = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrendingArtist.setLayoutManager(layoutManagerTrendingArtist);
@@ -233,18 +231,34 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
-    private List<NewReleaseMusic> getNewReleaseList() {
+    private void getNewReleaseList() {
         List<NewReleaseMusic> list = new ArrayList<>();
-        list.add(new NewReleaseMusic(R.drawable.noi_nay_co_anh_image, "Nơi này có anh", "Sơn Tùng MTP", "Hôm qua"));
-        list.add(new NewReleaseMusic(R.drawable.khoc_o_trong_club_image, "Khóc ở trong club", "Hiền Hồ", "Hôm qua"));
-        list.add(new NewReleaseMusic(R.drawable.a_loi_image, "À lôi", "Double2T, Masew", "1 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.the_feels_image, "The Feels", "TWICE", "1 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.hot_sauce_image, "Hot Sauce", "NCT DREAM", "2 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.kill_this_love_image, "Kill This Love", "BLACKPINK", "2 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.vai_cau_noi_co_khien_nguoi_thay_doi_image, "Vài câu nói...", "GreyD, tlinh", "5 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.neu_luc_do_image, "Nếu lúc đó", "tlinh, 2Pillz", "5 ngày trước"));
-        list.add(new NewReleaseMusic(R.drawable.spring_day_image, "Spring Day", "BTS", "6 ngày trước"));
-        return list;
+        GridLayoutManager layoutManagerNewRelease = new GridLayoutManager(getContext(), 3, LinearLayoutManager.HORIZONTAL, false);
+        rvNewRelease.setLayoutManager(layoutManagerNewRelease);
+        rvNewRelease.setHasFixedSize(true);
+        FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("songs");
+        Query query =  databaseReference.limitToLast(9);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(list != null){
+                    list.clear();
+                }
+                for (DataSnapshot data: snapshot.getChildren()) {
+                    NewReleaseMusic  song = data.getValue(NewReleaseMusic.class);
+                    list.add(song);
+                    Log.d("ddđ", "onDataChange: " + song.getSongName());
+                }
+                rvNewRelease.setAdapter(new NewReleaseAdapter(list));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private List<Podcast> getPodcastList() {

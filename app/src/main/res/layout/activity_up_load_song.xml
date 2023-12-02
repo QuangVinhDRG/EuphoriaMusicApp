@@ -14,111 +14,112 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/blueColor"
         android:text=" Choose Category :"
-        android:layout_marginBottom="5dp"
-
-        ></TextView>
+        android:textColor="@color/black"
+        android:layout_marginBottom="5dp"/>
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        ></Spinner>
-
+        android:id="@+id/spinner"/>
     <LinearLayout
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        >
-        <Button
+        android:background="#ffffff">
+        <android.widget.Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:text="Upload Song"
             android:onClick="openAudioFiles"
-            android:id="@+id/openAudioFiles"
-            ></Button>
-
+            android:background="#FFA3AE"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:id="@+id/openAudioFiles"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:gravity="center"
             android:text="No file Selected"
-            android:id="@+id/textViewSongsFilesSelected"
-            ></TextView>
-
-
+            android:id="@+id/textViewSongsFilesSelected"/>
     </LinearLayout>
-
     <ProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:id="@+id/progressbar"
         android:layout_marginTop="10dp"
-        >
-
-    </ProgressBar>
-
-    <Button
+        android:progressTint="#73D673"
+        android:progressBackgroundTint="@color/white"/>
+    <android.widget.Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonUpload"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
+        android:background="#73D673"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         android:onClick="uploadFileTofirebase"
         android:text="upload"
-        android:textStyle="bold"
-        ></Button>
+        android:textStyle="bold"/>
     <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="title"
-            android:id="@+id/title"
-            android:textStyle="bold">
-
-        </TextView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="artist"
-            android:id="@+id/artist"
-            android:textStyle="bold">
-
-        </TextView>
-
+        android:orientation="horizontal">
         <ImageView
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/imageview"
-            ></ImageView>
-
-
+            android:id="@+id/imageview"/>
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="NAME SONG"
+                android:textSize="20sp"
+                android:id="@+id/title"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AUTHOR"
+                android:textSize="16sp"
+                android:id="@+id/artist"/>
+        </LinearLayout>
     </LinearLayout>
 
-    <Button
+    <android.widget.Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#97D5FC"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="16sp"
         android:id="@+id/openimageuploadactivtiy"
         android:onClick="openAlbumUploadsActivty"
-        android:text="open upload album activity"
-        ></Button>
-
-
-    <Button
+        android:text="open upload album activity"/>
+    <android.widget.Button
+        android:background="#F70000"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:id="@+id/logout"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="Logout"
-       />
+        android:text="Logout"/>
 </LinearLayout>

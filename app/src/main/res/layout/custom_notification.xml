@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:padding="10dp"
+   >
+
+    <ImageView
+        android:id="@+id/imgsongg"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/facebook_logo"
+        android:scaleType="centerCrop"
+        android:layout_centerVertical="true"
+
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/imgsongg"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toStartOf="@+id/imPlay"
+        android:layout_marginEnd="10dp"
+        >
+        <TextView
+            android:id="@+id/title_name_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:id="@+id/title_single_song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="13sp"
+            android:textColor="@android:color/darker_gray"
+            />
+
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/imClose"
+        android:src="@drawable/pause_button_notification"
+        android:layout_marginEnd="30dp"
+        android:layout_centerVertical="true"
+        />
+    <ImageView
+        android:id="@+id/imClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/cancel"
+        android:layout_centerVertical="true"
+        />
+
+
+</RelativeLayout>

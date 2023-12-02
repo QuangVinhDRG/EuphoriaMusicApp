@@ -44,7 +44,7 @@
                 android:id="@+id/tvNewReleaseTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hôm qua"
+                android:text=""
                 android:textSize="16sp"/>
         </LinearLayout>
         <ImageButton

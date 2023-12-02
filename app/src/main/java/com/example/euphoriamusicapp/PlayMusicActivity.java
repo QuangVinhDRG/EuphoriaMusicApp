@@ -1,18 +1,19 @@
 package com.example.euphoriamusicapp;
 
-import androidx.annotation.NonNull;
+
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +23,17 @@ import com.example.euphoriamusicapp.adapter.PodcastAdapter;
 import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.Podcast;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.example.euphoriamusicapp.service.Myservice;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PlayMusicActivity extends AppCompatActivity {
+    public static final String CHANNEL_ID = "EUPHORIA_APP_MUSIC";
     private ImageButton ibBack;
     private CircleImageView imgSong;
     private TextView tvTatolTime,tvCurrentTime,tvPlayMusicSongName,tvPlayMusicArtistName;
@@ -161,8 +160,35 @@ public class PlayMusicActivity extends AppCompatActivity {
                 ListSongorPodcast(PREVIOUS);
             }
         });
+        CreateNotification();
+        SenNotification();
+
 
     }
+
+    private void CreateNotification() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel  channel =  new NotificationChannel(CHANNEL_ID,"PlayMusic", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager =getSystemService(NotificationManager.class);
+            if(notificationManager != null){
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+    }
+
+    private void SenNotification() {
+
+        Intent intent =  new Intent(this, Myservice.class);
+        Bundle bundle = new Bundle();
+        if(basicMusicInformation!= null){
+            bundle.putSerializable("Song_notification",basicMusicInformation);
+        }else{
+            bundle.putSerializable("Podcast_notification",podcast);
+        }
+        intent.putExtras(bundle);
+        startService(intent);
+    }
+
 
     private void miniLayoutmainapp() {
         Intent intent = new Intent(PlayMusicActivity.this, MainAppActivity.class);
