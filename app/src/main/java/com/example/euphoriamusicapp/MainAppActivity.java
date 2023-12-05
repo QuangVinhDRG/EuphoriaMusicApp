@@ -15,10 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.adapter.MainAppAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.Podcast;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,28 +48,21 @@ public class MainAppActivity extends AppCompatActivity {
         llInfoMiniPlaySong = findViewById(R.id.llInfoMiniPlaySong);
         civSongImage = findViewById(R.id.civSongImage);
         ibPlay = findViewById(R.id.ibPlayminimusic);
-        if(PlayMusicActivity.mediaPlayer == null ){
-            layoutMiniPlayMusic.setVisibility(View.GONE);
+        if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() ){
+            layoutMiniPlayMusic.setVisibility(View.VISIBLE);
+            //KHOI TAO MINI LAYOUT
+            tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
+            tvMiniPlaySongName.setText(PlayMusicActivity.musicAndPodcast.getSongName());
+            Glide
+                    .with(this)
+                    .load(PlayMusicActivity.musicAndPodcast.getImage())
+                    .into(civSongImage);
         }
         else{
-            layoutMiniPlayMusic.setVisibility(View.VISIBLE);
 
-            if(PlayMusicActivity.basicMusicInformation != null){
-                tvArtistName.setText(PlayMusicActivity.basicMusicInformation.getAuthorName());
-                tvMiniPlaySongName.setText(PlayMusicActivity.basicMusicInformation.getSongName());
-                Glide
-                        .with(this)
-                        .load(PlayMusicActivity.basicMusicInformation.getImage())
-                        .into(civSongImage);
-            }else {
-                tvArtistName.setText(PlayMusicActivity.podcast.getAuthorname());
-                tvMiniPlaySongName.setText(PlayMusicActivity.podcast.getPodcastName());
-                Glide
-                        .with(this)
-                        .load(PlayMusicActivity.podcast.getImage())
-                        .into(civSongImage);
+            layoutMiniPlayMusic.setVisibility(View.GONE);
             }
-        }
+
 
         ibPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,11 +142,9 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                if(PlayMusicActivity.basicMusicInformation != null){
-                    bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-                }else{
-                    bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
-                }
+
+                //bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -163,12 +154,9 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                if(PlayMusicActivity.basicMusicInformation != null){
-                    bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-                }else{
-                    bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
-                }
-                Log.d("e3333e", "onCreate: lỗiiii");
+
+                   // bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -178,12 +166,10 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                if(PlayMusicActivity.basicMusicInformation != null){
-                    bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-                }else{
-                    bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
-                }
-                Log.d("e3333e", "onCreate: lỗiiii");
+
+                   // bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
+
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -193,12 +179,10 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                if(PlayMusicActivity.basicMusicInformation != null){
-                    bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-                }else{
-                    bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
-                }
-                Log.d("e3333e", "onCreate: lỗiiii");
+
+                  //  bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
+
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -208,11 +192,9 @@ public class MainAppActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                if(PlayMusicActivity.basicMusicInformation != null){
-                    bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-                }else{
-                    bundle.putSerializable("mainAppPodcast",PlayMusicActivity.podcast);
-                }
+
+                    //bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
+
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

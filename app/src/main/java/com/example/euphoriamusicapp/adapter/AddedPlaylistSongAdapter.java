@@ -8,14 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
+
 
 import java.util.List;
 
 public class AddedPlaylistSongAdapter extends BaseAdapter {
-    List<BasicMusicInformation> list;
+    List<MusicAndPodcast> list;
 
-    public AddedPlaylistSongAdapter(List<BasicMusicInformation> list) {
+    public AddedPlaylistSongAdapter(List<MusicAndPodcast> list) {
         this.list = list;
     }
 
@@ -40,7 +41,7 @@ public class AddedPlaylistSongAdapter extends BaseAdapter {
         ImageView ivSongImage = view.findViewById(R.id.ivSongImage);
         TextView tvSongName = view.findViewById(R.id.tvSongName);
         TextView tvArtistName = view.findViewById(R.id.tvArtistName);
-        BasicMusicInformation basicMusicInformation = list.get(position);
+        MusicAndPodcast basicMusicInformation = list.get(position);
         ivSongImage.setImageResource(basicMusicInformation.getResourceId());
         tvSongName.setText(basicMusicInformation.getSongName());
         tvArtistName.setText(basicMusicInformation.getAuthorName());

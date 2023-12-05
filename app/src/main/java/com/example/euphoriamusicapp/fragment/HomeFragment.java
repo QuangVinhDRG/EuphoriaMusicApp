@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.ExploreAdapter;
@@ -28,9 +27,8 @@ import com.example.euphoriamusicapp.adapter.TopicAndCategoryAdapter;
 import com.example.euphoriamusicapp.adapter.TrendingArtistAdapter;
 import com.example.euphoriamusicapp.data.HotAlbum;
 import com.example.euphoriamusicapp.data.ImageOfMusic;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.NewReleaseMusic;
-import com.example.euphoriamusicapp.data.Podcast;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
 import com.example.euphoriamusicapp.data.TopicAndCategory;
 import com.example.euphoriamusicapp.data.TrendingArtist;
 import com.google.firebase.database.DataSnapshot;
@@ -54,7 +52,8 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final long SONG = 1;
+    public static final long PODCAST = 2;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -187,7 +186,7 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager layoutManagerRecentListen = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvRecentListen.setLayoutManager(layoutManagerRecentListen);
         rvRecentListen.setHasFixedSize(true);
-        List<BasicMusicInformation> listSong = new ArrayList<>();
+        List<MusicAndPodcast> listSong = new ArrayList<>();
         FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         databaseReference.child("songs").addValueEventListener(new ValueEventListener() {
@@ -197,8 +196,11 @@ public class HomeFragment extends Fragment {
                     listSong.clear();
                 }
                 for (DataSnapshot data: snapshot.getChildren()) {
-                    BasicMusicInformation  song = data.getValue(BasicMusicInformation.class);
-                    listSong.add(song);
+                    MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    if(song.getType() == SONG){
+                        listSong.add(song);
+                    }
+
                 }
                 rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
 
@@ -248,7 +250,6 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot data: snapshot.getChildren()) {
                     NewReleaseMusic  song = data.getValue(NewReleaseMusic.class);
                     list.add(song);
-                    Log.d("ddđ", "onDataChange: " + song.getSongName());
                 }
                 rvNewRelease.setAdapter(new NewReleaseAdapter(list));
             }
@@ -261,19 +262,21 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private List<Podcast> getPodcastList() {
+    private List<MusicAndPodcast> getPodcastList() {
         LinearLayoutManager layoutManagerPodcast = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvPodcast.setLayoutManager(layoutManagerPodcast);
         rvPodcast.setHasFixedSize(true);
-        List<Podcast> listPodcast = new ArrayList<>();
+        List<MusicAndPodcast> listPodcast = new ArrayList<>();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
         databaseReference.child("podcast").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    Podcast podcast = data.getValue(Podcast.class);
-                    listPodcast.add(podcast);
+                    MusicAndPodcast podcast = data.getValue(MusicAndPodcast.class);
+                    if(podcast.getType() == PODCAST){
+                        listPodcast.add(podcast);
+                    }
                 }
                 rvPodcast.setAdapter(new PodcastAdapter(getContext(),listPodcast));
 
@@ -312,16 +315,16 @@ public class HomeFragment extends Fragment {
 
     private List<TopicAndCategory> getTopicCategoryList() {
         List<TopicAndCategory> list = new ArrayList<>();
-        list.add(new TopicAndCategory(R.drawable.lofi_image, "Lofi"));
-        list.add(new TopicAndCategory(R.drawable.hiphop_image, "Hip Hop"));
-        list.add(new TopicAndCategory(R.drawable.pop_image, "Pop"));
-        list.add(new TopicAndCategory(R.drawable.ballad_image, "Ballad"));
-        list.add(new TopicAndCategory(R.drawable.electronic_image, "Electronic"));
-        list.add(new TopicAndCategory(R.drawable.classical_music_image, "Classical Music"));
-        list.add(new TopicAndCategory(R.drawable.game_music_image, "Game Music"));
-        list.add(new TopicAndCategory(R.drawable.rock_image, "Rock"));
-        list.add(new TopicAndCategory(R.drawable.jazz_music, "Jazz"));
-        list.add(new TopicAndCategory(R.drawable.indie_music, "Indie"));
+        list.add(new TopicAndCategory(R.drawable.lofi_image, "Lofi",1));
+        list.add(new TopicAndCategory(R.drawable.hiphop_image, "Hip Hop",1));
+        list.add(new TopicAndCategory(R.drawable.pop_image, "Pop",1));
+        list.add(new TopicAndCategory(R.drawable.ballad_image, "Ballad",1));
+        list.add(new TopicAndCategory(R.drawable.electronic_image, "Electronic",1));
+        list.add(new TopicAndCategory(R.drawable.classical_music_image, "Classical Music",1));
+        list.add(new TopicAndCategory(R.drawable.game_music_image, "Game Music",1));
+        list.add(new TopicAndCategory(R.drawable.rock_image, "Rock",1));
+        list.add(new TopicAndCategory(R.drawable.jazz_music, "Jazz",1));
+        list.add(new TopicAndCategory(R.drawable.indie_music, "Indie",1));
         return list;
     }
 }

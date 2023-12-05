@@ -22,7 +22,8 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+//        Intent intent = new Intent(WelcomeActivity.this, UpLoadSong.class);
+//           startActivity(intent);
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
             Intent intent = new Intent(WelcomeActivity.this, MainAppActivity.class);

@@ -4,11 +4,11 @@ public class TrendingArtist {
     private int resourceId;
     private String artistName;
 
+
     public TrendingArtist(int resourceId, String artistName) {
         this.resourceId = resourceId;
         this.artistName = artistName;
     }
-
     public int getResourceId() {
         return resourceId;
     }

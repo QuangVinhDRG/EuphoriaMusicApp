@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.AddedPlaylistSongAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +42,17 @@ public class ManagePlaylistFragment extends Fragment {
     private TextView tvPlaylistNumberOfSong;
     private Button btnRandomPlay;
     private AddedPlaylistSongAdapter addedPlaylistSongAdapter;
-    private List<BasicMusicInformation> addedPlaylistSong = new ArrayList<>();
+    private List<MusicAndPodcast> addedPlaylistSong = new ArrayList<>();
 
     public ManagePlaylistFragment() {
         // Required empty public constructor
     }
 
-    public List<BasicMusicInformation> getAddedPlaylistSong() {
+    public List<MusicAndPodcast> getAddedPlaylistSong() {
         return addedPlaylistSong;
     }
 
-    public void setAddedPlaylistSong(List<BasicMusicInformation> addedPlaylistSong) {
+    public void setAddedPlaylistSong(List<MusicAndPodcast> addedPlaylistSong) {
         this.addedPlaylistSong = addedPlaylistSong;
     }
 
@@ -120,8 +121,8 @@ public class ManagePlaylistFragment extends Fragment {
         return view;
     }
 
-    private List<BasicMusicInformation> getPlaylistSong() {
-        List<BasicMusicInformation> list = new ArrayList<>();
+    private List<MusicAndPodcast> getPlaylistSong() {
+        List<MusicAndPodcast> list = new ArrayList<>();
 //        list.add(new BasicMusicInformation(R.drawable.cruel_summer_image, "Cruel Summer", "Taylor Swift"));
 //        list.add(new BasicMusicInformation(R.drawable.chung_ta_cua_hien_tai_image, "Chúng ta của hiện tại", "Sơn Tùng MTP"));
 //        list.add(new BasicMusicInformation(R.drawable.khoc_o_trong_club_image, "Khóc ở trong club", "Hiền Hồ"));

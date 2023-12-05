@@ -2,7 +2,6 @@ package com.example.euphoriamusicapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,24 +9,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapter.RecentListenViewHolder>{
-    public static List<BasicMusicInformation> basicMusicInformationList;
+    public static List<MusicAndPodcast> basicMusicInformationList;
     private Context mContext;
 
-    public RecentListenAdapter(Context context,List<BasicMusicInformation> recentListenList) {
+    public RecentListenAdapter(Context context,List<MusicAndPodcast> recentListenList) {
         this.mContext = context;
         this.basicMusicInformationList = recentListenList;
 
@@ -44,7 +47,7 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecentListenViewHolder holder, int position) {
-        BasicMusicInformation basicMusicInformation = basicMusicInformationList.get(position);
+        MusicAndPodcast basicMusicInformation = basicMusicInformationList.get(position);
 
         if (basicMusicInformation == null) {
             return;
@@ -58,22 +61,36 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
             holder.layoutItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickgotoPlaymusic(basicMusicInformation);
+                    onClickgotoPlaymusic(basicMusicInformation,position);
                 }
             });
         }
 
     }
 
-    private void onClickgotoPlaymusic(BasicMusicInformation basicMusicInformation) {
+    private void onClickgotoPlaymusic(MusicAndPodcast basicMusicInformation,int p) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()){
             PlayMusicActivity.mediaPlayer.reset();
         }
-        Intent intent  = new Intent(mContext, PlayMusicActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Song",basicMusicInformation);
-        intent.putExtras(bundle);
-        mContext.startActivity(intent);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("songs/"+(p+1)+"/count");
+        basicMusicInformation.setCount(basicMusicInformation.getCount() + 1);
+        databaseReference.setValue(basicMusicInformation.getCount(), new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                Intent intent  = new Intent(mContext, PlayMusicActivity.class);
+                Bundle bundle = new Bundle();
+                Log.d("ddddd", "onComplete: " + basicMusicInformation.getUrl());
+                Log.d("ddddd", "onComplete: " + basicMusicInformation.getImage());
+                Log.d("ddddd", "onComplete: " + basicMusicInformation.getSongName());
+                Log.d("ddddd", "onComplete: " + basicMusicInformation.getAuthorName());
+
+                bundle.putSerializable("Song",basicMusicInformation);
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 
     @Override

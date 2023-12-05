@@ -4,6 +4,7 @@ package com.example.euphoriamusicapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -11,6 +12,9 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -21,8 +25,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.adapter.PodcastAdapter;
 import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.Podcast;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
+import com.example.euphoriamusicapp.fragment.HomeFragment;
 import com.example.euphoriamusicapp.service.Myservice;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,9 +47,9 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     private ImageButton ibPrevious;
     private ImageButton ibNext;
+    private ImageButton ibRepeat;
     public static MediaPlayer mediaPlayer;
-    public static  BasicMusicInformation basicMusicInformation;
-    public static  Podcast podcast;
+    public static MusicAndPodcast musicAndPodcast;
     private Handler handler = new Handler();
     private final int PREVIOUS = -1;
     private final int NEXT = 1;
@@ -64,66 +68,24 @@ public class PlayMusicActivity extends AppCompatActivity {
         ibPrevious = findViewById(R.id.ibPrevious);
         ibNext = findViewById(R.id.ibNext);
         ibFavourite = findViewById(R.id.ibFavourite);
+        ibRepeat = findViewById(R.id.ibRepeat);
         sbTimelineMusic.setMax(100);
         mediaPlayer = new MediaPlayer();
         //receive data từ homfracment
         Bundle bundle = getIntent().getExtras();
-        basicMusicInformation = (BasicMusicInformation) bundle.get("Song");
-        podcast = (Podcast) bundle.get("podcast");
-        if(basicMusicInformation == null && podcast != null){
-            prepareMediaPlayer(podcast.getUrl());
-            tvPlayMusicArtistName.setText(podcast.getAuthorname());
-            tvPlayMusicSongName.setText(podcast.getPodcastName());
+        if(bundle.get("Song") != null){
+            musicAndPodcast = (MusicAndPodcast) bundle.get("Song");
+            prepareMediaPlayer(musicAndPodcast.getUrl());
+            tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
+            tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
             Glide
                     .with(this)
-                    .load(podcast.getImage())
+                    .load(musicAndPodcast.getImage())
                     .into(imgSong);
-        }else if(basicMusicInformation != null){
-            prepareMediaPlayer(basicMusicInformation.getUrl());
-            tvPlayMusicArtistName.setText(basicMusicInformation.getAuthorName());
-            tvPlayMusicSongName.setText(basicMusicInformation.getSongName());
-            Glide
-                    .with(this)
-                    .load(basicMusicInformation.getImage())
-                    .into(imgSong);
-
         }else{
-            basicMusicInformation = (BasicMusicInformation) bundle.get("mainAppSong");
-            if(basicMusicInformation == null){
-                podcast = (Podcast) bundle.get("mainAppPodcast");
-                tvPlayMusicArtistName.setText(podcast.getAuthorname());
-                tvPlayMusicSongName.setText(podcast.getPodcastName());
-                Glide
-                        .with(this)
-                        .load(podcast.getImage())
-                        .into(imgSong);
-                try {
-                    mediaPlayer.setDataSource(podcast.getUrl());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                tvTatolTime.setText(milliSecordsToTimer(mediaPlayer.getDuration()));
-                updateSeekbar();
-            }else{
 
-                tvPlayMusicArtistName.setText(basicMusicInformation.getAuthorName());
-                tvPlayMusicSongName.setText(basicMusicInformation.getSongName());
-                Glide
-                        .with(this)
-                        .load(basicMusicInformation.getImage())
-                        .into(imgSong);
-                try {
-                    mediaPlayer.setDataSource(basicMusicInformation.getUrl());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                tvTatolTime.setText(milliSecordsToTimer(mediaPlayer.getDuration()));
-                updateSeekbar();
-            }
-
-
+            tvCurrentTime.setText(milliSecordsToTimer(mediaPlayer.getCurrentPosition()));
         }
-
 
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +113,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         ibNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ListSongorPodcast(NEXT);
+                if(musicAndPodcast.isLatest()){
+                    ListSongorPodcast(NEXT);
+                }else{
+                    Toast.makeText(PlayMusicActivity.this, "Dánh sách phát đã hết!!!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         ibPrevious.setOnClickListener(new View.OnClickListener() {
@@ -160,10 +126,73 @@ public class PlayMusicActivity extends AppCompatActivity {
                 ListSongorPodcast(PREVIOUS);
             }
         });
-        CreateNotification();
-        SenNotification();
+        sbTimelineMusic.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SeekBar seekBar = (SeekBar) v;
+                int playPosition =(mediaPlayer.getDuration()/100) * seekBar.getProgress();
+                mediaPlayer.seekTo(playPosition);
+                tvCurrentTime.setText(milliSecordsToTimer(mediaPlayer.getCurrentPosition()));
+                return false;
+            }
+        });
+      //  CreateNotification();
+        ibRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ibRepeat.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.repeat_icon_all).getConstantState()) ){
+                    ibRepeat.setImageResource(R.drawable.repeat_icon_one);
+                }else if(ibRepeat.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.repeat_icon_one).getConstantState()) ){
+                    ibRepeat.setImageResource(R.drawable.repeat_icon_default);
+                }else{
+                    ibRepeat.setImageResource(R.drawable.repeat_icon_all);
+                }
+            }
+        });
+        Handler handler1 = new Handler();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                handler1.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(ibRepeat.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.repeat_icon_all).getConstantState()) ){
+                            if(musicAndPodcast.isLatest() == false){
+                                if(musicAndPodcast.getType() == HomeFragment.SONG){
+                                    repeatAll(RecentListenAdapter.basicMusicInformationList);
+                                }else{
+                                    repeatAll(PodcastAdapter.podcastList);
+                                }
+                            }else{
+                                ListSongorPodcast(NEXT);
+                            }
+                        }else if(ibRepeat.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.repeat_icon_one).getConstantState()) ){
+                            mediaPlayer.reset();
+                            prepareMediaPlayer(musicAndPodcast.getUrl());
+                        }else{
+                            ListSongorPodcast(NEXT);
+                        }
+                    }
+                },1000);
+            }
+        });
 
 
+
+
+}
+
+    private void repeatAll(List<MusicAndPodcast> listSong) {
+        mediaPlayer.reset();
+        tvPlayMusicArtistName.setText(listSong.get(0).getAuthorName());
+        tvPlayMusicSongName.setText(listSong.get(0).getSongName());
+        Glide
+                .with(PlayMusicActivity.this)
+                .load(listSong.get(0).getImage())
+                .into(imgSong);
+        musicAndPodcast = listSong.get(0);
+        prepareMediaPlayer(listSong.get(0).getUrl());
     }
 
     private void CreateNotification() {
@@ -176,18 +205,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    private void SenNotification() {
 
-        Intent intent =  new Intent(this, Myservice.class);
-        Bundle bundle = new Bundle();
-        if(basicMusicInformation!= null){
-            bundle.putSerializable("Song_notification",basicMusicInformation);
-        }else{
-            bundle.putSerializable("Podcast_notification",podcast);
-        }
-        intent.putExtras(bundle);
-        startService(intent);
-    }
 
 
     private void miniLayoutmainapp() {
@@ -196,33 +214,31 @@ public class PlayMusicActivity extends AppCompatActivity {
     }
 
     private void ListSongorPodcast(int i) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference();
-        if(basicMusicInformation != null){
+        if(musicAndPodcast.getType() == HomeFragment.SONG){
             if(i == NEXT){
                 NextSong(RecentListenAdapter.basicMusicInformationList);
             }else{
                 PreSong(RecentListenAdapter.basicMusicInformationList);
             }
-        }else if(podcast != null){
+        }else{
             if(i == NEXT){
-                NextPobcast(PodcastAdapter.podcastList);
+                NextSong(PodcastAdapter.podcastList);
             }else{
-                PrePobcast(PodcastAdapter.podcastList);
+                PreSong(PodcastAdapter.podcastList);
             }
         }
     }
 
-    private void NextSong(List<BasicMusicInformation> listSong) {
+    private void NextSong(List<MusicAndPodcast> listSong) {
         int pos =0;
-        for (BasicMusicInformation bs: listSong) {
-            if(bs.getUrl().equals(basicMusicInformation.getUrl())){
+        for (MusicAndPodcast bs: listSong) {
+            if(bs.getUrl().equals(musicAndPodcast.getUrl())){
                 break;
             }
             pos = pos+1;
 
         }
-        if(listSong.size() > pos ){
+        if(listSong.size() > pos){
             if(listSong.get(pos).isLatest()){
                 mediaPlayer.reset();
                 tvPlayMusicArtistName.setText(listSong.get(pos + 1).getAuthorName());
@@ -231,42 +247,20 @@ public class PlayMusicActivity extends AppCompatActivity {
                         .with(PlayMusicActivity.this)
                         .load(listSong.get(pos + 1).getImage())
                         .into(imgSong);
-                basicMusicInformation = listSong.get(pos+1);
+                musicAndPodcast = listSong.get(pos+1);
                 prepareMediaPlayer(listSong.get(pos + 1).getUrl());
             }else{
-
+                handler.removeCallbacks(updater);
+                mediaPlayer.stop();
+                ibPlay.setImageResource(R.drawable.stop_icon_1);
+                stopAnimation();
             }
         }
     }
-    private void NextPobcast(List<Podcast> listPodcast) {
+    private void PreSong(List<MusicAndPodcast> listSong) {
         int pos =0;
-        for (Podcast bs: listPodcast) {
-            if(bs.getUrl().equals(podcast.getUrl())){
-                break;
-            }
-            pos = pos+1;
-
-        }
-        if(listPodcast.size() > pos ){
-            if(listPodcast.get(pos).isLatest()){
-                mediaPlayer.reset();
-                tvPlayMusicArtistName.setText(listPodcast.get(pos + 1).getAuthorname());
-                tvPlayMusicSongName.setText(listPodcast.get(pos + 1).getPodcastName());
-                Glide
-                        .with(PlayMusicActivity.this)
-                        .load(listPodcast.get(pos + 1).getImage())
-                        .into(imgSong);
-                podcast = listPodcast.get(pos+1);
-                prepareMediaPlayer(listPodcast.get(pos + 1).getUrl());
-            }else{
-
-            }
-        }
-    }
-    private void PreSong(List<BasicMusicInformation> listSong) {
-        int pos =0;
-        for (BasicMusicInformation bs: listSong) {
-            if(bs.getUrl().equals(basicMusicInformation.getUrl())){
+        for (MusicAndPodcast bs: listSong) {
+            if(bs.getUrl().equals(musicAndPodcast.getUrl())){
                 break;
             }
             pos = pos+1;
@@ -280,38 +274,14 @@ public class PlayMusicActivity extends AppCompatActivity {
                     .with(PlayMusicActivity.this)
                     .load(listSong.get(pos - 1).getImage())
                     .into(imgSong);
-            basicMusicInformation = listSong.get(pos-1);
+            musicAndPodcast = listSong.get(pos-1);
             prepareMediaPlayer(listSong.get(pos - 1).getUrl());
             }else{
 
             }
 
     }
-    private void PrePobcast(List<Podcast> listPodcast) {
-        int pos =0;
-        for (Podcast pc: listPodcast) {
-            if(pc.getUrl().equals(podcast.getUrl())){
-                break;
-            }
-            pos = pos+1;
 
-        }
-        if(listPodcast.get(pos).isFeatured()){
-            mediaPlayer.reset();
-            tvPlayMusicArtistName.setText(listPodcast.get(pos - 1).getAuthorname());
-            tvPlayMusicSongName.setText(listPodcast.get(pos - 1).getPodcastName());
-            Glide
-                    .with(PlayMusicActivity.this)
-                    .load(listPodcast.get(pos - 1).getImage())
-                    .into(imgSong);
-            podcast = listPodcast.get(pos-1);
-            prepareMediaPlayer(listPodcast.get(pos - 1).getUrl());
-        }else{
-
-
-}
-
-    }
     private void prepareMediaPlayer(String url){
         try{
             mediaPlayer.setDataSource(url);

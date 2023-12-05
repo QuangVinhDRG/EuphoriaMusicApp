@@ -3,29 +3,24 @@ package com.example.euphoriamusicapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
+;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.euphoriamusicapp.Admin.UpLoadSong;
-import com.example.euphoriamusicapp.adapter.PodcastAdapter;
-import com.example.euphoriamusicapp.data.Podcast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -44,11 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 public class MainActivity extends AppCompatActivity {
     Button btnLogin;
@@ -58,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton ibShowHidePassword;
 
     EditText edtEmail,editPass;
-    private FirebaseAuth mAuth;
+    protected FirebaseAuth mAuth;
     private static  final int RC_SIGN_IN = 11;
     private static final String TAG  = "GOOGLEAUTH12";
 
@@ -81,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         btnloginfb = findViewById(R.id.btnLoginWithfb);
         ibShowHidePassword = findViewById(R.id.ibShowHidePassword);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
+
 
         //Auth
         mAuth = FirebaseAuth.getInstance();
@@ -143,6 +136,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SignInWithFirebase();
+            }
+        });
+        btnloginfb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FacebookAuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
             }
         });
         edtEmail.addTextChangedListener(new TextWatcher() {

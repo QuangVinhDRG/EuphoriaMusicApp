@@ -9,15 +9,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.RecentSearch;
+
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
+
 
 import java.util.List;
 
 public class RecentSearchAdapter extends BaseAdapter {
-    private List<BasicMusicInformation> recentSearchList;
+    private List<MusicAndPodcast> recentSearchList;
 
-    public RecentSearchAdapter(List<BasicMusicInformation> recentSearchList) {
+    public RecentSearchAdapter(List<MusicAndPodcast> recentSearchList) {
         this.recentSearchList = recentSearchList;
     }
 
@@ -44,7 +45,7 @@ public class RecentSearchAdapter extends BaseAdapter {
 
         TextView tvSearchArtist = view.findViewById(R.id.tvRecentSearchArtist);
 
-        BasicMusicInformation BasicMusicInformation = recentSearchList.get(position);
+        MusicAndPodcast BasicMusicInformation = recentSearchList.get(position);
         Glide
                 .with(ivRecentSearch)
                 .load(BasicMusicInformation.getImage())

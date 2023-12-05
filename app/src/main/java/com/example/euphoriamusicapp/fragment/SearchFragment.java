@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.adapter.RecentSearchAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.RecentSearch;
+
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +52,7 @@ public class SearchFragment extends Fragment {
     private View view;
     private EditText etSearch;
     private TextView DeleteAll;
-    List<BasicMusicInformation> list = new ArrayList<>();
+    List<MusicAndPodcast> list = new ArrayList<>();
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -142,7 +142,7 @@ public class SearchFragment extends Fragment {
                         list.clear();
                     }
                     for (DataSnapshot data: snapshot.getChildren()) {
-                        BasicMusicInformation song = data.getValue(BasicMusicInformation.class);
+                        MusicAndPodcast song = data.getValue(MusicAndPodcast.class);
                         if(song.getSongName().contains(key)){
                             list.add(song);
                         }

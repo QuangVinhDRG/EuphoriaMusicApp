@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.FavouriteSongAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.RankingMusic;
 
 import java.util.ArrayList;
@@ -90,8 +90,8 @@ public class SongFragment extends Fragment {
         return view;
     }
 
-    public List<BasicMusicInformation> getFavouriteMusicList() {
-        List<BasicMusicInformation> list = new ArrayList<>();
+    public List<MusicAndPodcast> getFavouriteMusicList() {
+        List<MusicAndPodcast> list = new ArrayList<>();
 
         return list;
     }

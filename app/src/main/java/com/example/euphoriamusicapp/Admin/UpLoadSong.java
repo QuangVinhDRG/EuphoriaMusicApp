@@ -16,11 +16,9 @@ import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -29,14 +27,14 @@ import android.widget.Toast;
 
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.adapter.PodcastAdapter;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.Podcast;
+
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.TopicAndCategory;
+import com.example.euphoriamusicapp.fragment.HomeFragment;
+import com.example.euphoriamusicapp.fragment.playlist.SongFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,8 +50,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.example.euphoriamusicapp.R;
 
 public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -105,8 +101,9 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
                     TopicAndCategory topicAndCategory = data.getValue(TopicAndCategory.class);
-                    categories.add(topicAndCategory.getTopicAndCategoryName());
-                    Log.d("TAG", "onDataChange: " + topicAndCategory.getTopicAndCategoryName());
+                    if(topicAndCategory.getType() == HomeFragment.SONG){
+                        categories.add(topicAndCategory.getTopicAndCategoryName());
+                    }
                 }
                 ArrayAdapter <String> dataAdpter = new ArrayAdapter<>(UpLoadSong.this , android.R.layout.simple_spinner_item,categories);
                 dataAdpter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -137,7 +134,6 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
         positon_ca = i+1;
         songsCategory = adapterView.getItemAtPosition(i).toString();
         Toast.makeText(this, "Selected: "+ songsCategory, Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -190,9 +186,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             Cursor cursor = getContentResolver().query(uri, null,null,null,null);
             try {
                 if (cursor != null && cursor.moveToFirst()) {
-
-                      result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
             }
             finally {
@@ -245,7 +239,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     coppyuri(uri,AUDIO);
-                                    Log.d("ffffff", "onFailure: "+uri);
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -265,7 +259,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("gghe", "onFailure: "+e.getMessage());
+
                 }
             })
             ;
@@ -338,7 +332,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             uri_audio = uri.toString();
         }
        if( uri_audio != "" &&  uri_image != ""){
-           List<BasicMusicInformation> listSong = new ArrayList<>();
+           List<MusicAndPodcast> listSong = new ArrayList<>();
            FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
            DatabaseReference databaseReference = firebaseDatabase.getReference();
            databaseReference.child("songs").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -348,7 +342,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
                        listSong.clear();
                    }
                    for (DataSnapshot data: snapshot.getChildren()) {
-                       BasicMusicInformation  song = data.getValue(BasicMusicInformation.class);
+                       MusicAndPodcast song = data.getValue(MusicAndPodcast.class);
                        listSong.add(song);
                    }
                    putDataToRealTimeDatabase(listSong.size() + 1,uri_image,uri_audio);
@@ -363,7 +357,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
     }
 
     private void putDataToRealTimeDatabase(int size,String uri_image1, String uri_audio1) {
-        BasicMusicInformation uploadSong = new BasicMusicInformation(positon_ca,title.getText().toString(),artist.getText().toString(),uri_image1,uri_audio1,false,true,0);
+        MusicAndPodcast uploadSong = new MusicAndPodcast(positon_ca,title.getText().toString(),artist.getText().toString(),uri_image1,uri_audio1,false,true,0,1);
         referenceSongs.child(String.valueOf(size)).setValue(uploadSong);
         FirebaseDatabase   firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference data =  firebaseDatabase.getReference("songs");
@@ -373,6 +367,4 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
         uri_audio = "" ;
         uri_image = "";
     }
-
-
 }

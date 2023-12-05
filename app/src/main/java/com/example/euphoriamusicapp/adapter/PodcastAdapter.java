@@ -16,16 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
-import com.example.euphoriamusicapp.data.BasicMusicInformation;
-import com.example.euphoriamusicapp.data.Podcast;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 
 import java.util.List;
 
 public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder> {
-    public static List<Podcast> podcastList;
+    public static List<MusicAndPodcast> podcastList;
     private Context mContext;
 
-    public PodcastAdapter(Context Context,List<Podcast> podcastList) {
+    public PodcastAdapter(Context Context,List<MusicAndPodcast> podcastList) {
         this.podcastList = podcastList;
         this.mContext = Context;
     }
@@ -39,7 +38,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
 
     @Override
     public void onBindViewHolder(@NonNull PodcastViewHolder holder, int position) {
-        Podcast podcast = podcastList.get(position);
+        MusicAndPodcast podcast = podcastList.get(position);
         if (podcast == null) {
             return;
         } else {
@@ -47,8 +46,8 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
                     .with(holder.ivPodcast)
                     .load(podcast.getImage())
                     .into(holder.ivPodcast);
-            holder.tvPodcastName.setText(podcast.getPodcastName());
-            holder.tvPodcastAuthorName.setText(podcast.getAuthorname());
+            holder.tvPodcastName.setText(podcast.getSongName());
+            holder.tvPodcastAuthorName.setText(podcast.getAuthorName());
             holder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -57,13 +56,13 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
             });
         }
     }
-    private void onClickgotoPlayPodcast(Podcast podcast) {
+    private void onClickgotoPlayPodcast(MusicAndPodcast podcast) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()){
             PlayMusicActivity.mediaPlayer.reset();
         }
         Intent intent  = new Intent(mContext, PlayMusicActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("podcast",podcast);
+        bundle.putSerializable("Song",podcast);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }
