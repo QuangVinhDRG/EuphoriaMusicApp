@@ -80,11 +80,6 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 Intent intent  = new Intent(mContext, PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                Log.d("ddddd", "onComplete: " + basicMusicInformation.getUrl());
-                Log.d("ddddd", "onComplete: " + basicMusicInformation.getImage());
-                Log.d("ddddd", "onComplete: " + basicMusicInformation.getSongName());
-                Log.d("ddddd", "onComplete: " + basicMusicInformation.getAuthorName());
-
                 bundle.putSerializable("Song",basicMusicInformation);
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);

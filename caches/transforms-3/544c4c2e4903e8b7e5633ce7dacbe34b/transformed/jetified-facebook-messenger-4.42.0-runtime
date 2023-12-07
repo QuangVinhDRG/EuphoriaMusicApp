@@ -1,0 +1,7 @@
+com.facebook.messenger.BuildConfig
+com.facebook.messenger.Messenger
+com.facebook.messenger.MessengerThreadParams
+com.facebook.messenger.MessengerThreadParams$Origin
+com.facebook.messenger.MessengerUtils
+com.facebook.messenger.ShareToMessengerParams
+com.facebook.messenger.ShareToMessengerParamsBuilder

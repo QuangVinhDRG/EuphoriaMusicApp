@@ -41,11 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+
 public class HomeFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match

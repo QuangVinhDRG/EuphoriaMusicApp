@@ -37,35 +37,14 @@ public class Myservice extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Bundle bundle = intent.getExtras();
-         basicMusicInformation= (MusicAndPodcast) bundle.get("Song_notification");
-
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.imgsong);
-            Intent intent1 =   new Intent(this, PlayMusicActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent1,PendingIntent.FLAG_UPDATE_CURRENT);
-            RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
-            remoteViews.setTextViewText(R.id.title_name_song,basicMusicInformation.getSongName());
-            remoteViews.setTextViewText(R.id.title_single_song,basicMusicInformation.getAuthorName());
-            remoteViews.setImageViewBitmap(R.id.imgsongg,bitmap);
-            remoteViews.setImageViewResource(R.id.imPlay,R.drawable.pause_button_notification);
-            remoteViews.setImageViewResource(R.id.imPlay,R.drawable.ic_play_arrow_24);
-          //  remoteViews.setOnClickPendingIntent(R.id.imClose,getPendingIntent(this,ACTION_CLOSE));
-            android.app.Notification notification =  new NotificationCompat.Builder(this,CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_small_icon_music)
-                    .setContentIntent(pendingIntent)
-                    .setCustomContentView(remoteViews)
-                    .setSound(null)
-                    .build();
-            startForeground(1,notification);
 
         return START_NOT_STICKY;
     }
 
-
-
-
-
-
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        stopSelf();
+    }
 
     @Override
     public void onDestroy() {
