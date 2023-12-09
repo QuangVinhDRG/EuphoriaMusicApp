@@ -8,15 +8,17 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.ImageOfMusic;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 
 import java.util.List;
 
 public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreViewHolder> {
-    private List<ImageOfMusic> exploreImageList;
+    private List<MusicAndPodcast> exploreImageList;
 
-    public ExploreAdapter(List<ImageOfMusic> imageList) {
+    public ExploreAdapter(List<MusicAndPodcast> imageList) {
         this.exploreImageList = imageList;
     }
 
@@ -29,11 +31,14 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreV
 
     @Override
     public void onBindViewHolder(@NonNull ExploreViewHolder holder, int position) {
-        ImageOfMusic exploreImage = exploreImageList.get(position);
+        MusicAndPodcast exploreImage = exploreImageList.get(position);
         if (exploreImage == null) {
             return;
         } else {
-            holder.ivExplore.setImageResource(exploreImage.getResourceId());
+            Glide
+                    .with(holder.ivExplore)
+                    .load(exploreImage.getImage())
+                    .into(holder.ivExplore);
         }
     }
 

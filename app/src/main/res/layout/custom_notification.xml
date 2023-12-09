@@ -21,7 +21,7 @@
         android:layout_marginStart="10dp"
         android:layout_centerVertical="true"
         android:orientation="vertical"
-        android:layout_toStartOf="@+id/imPlay"
+        android:layout_toStartOf="@+id/imPre"
         android:layout_marginEnd="10dp"
         >
         <TextView
@@ -44,18 +44,37 @@
 
     </LinearLayout>
     <ImageView
+        android:id="@+id/imPre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/imClose"
+        android:src="@drawable/ic_skip_previous_24"
+        android:layout_marginEnd="90dp"
+        android:layout_centerVertical="true"
+
+        />
+    <ImageView
         android:id="@+id/imPlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/imClose"
         android:src="@drawable/pause_button_notification"
+        android:layout_marginEnd="60dp"
+        android:layout_centerVertical="true"
+        />
+    <ImageView
+        android:id="@+id/imNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/imClose"
+        android:src="@drawable/ic_skip_next_24"
         android:layout_marginEnd="30dp"
         android:layout_centerVertical="true"
         />
     <ImageView
         android:id="@+id/imClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_alignParentEnd="true"
         android:src="@drawable/cancel"
         android:layout_centerVertical="true"

@@ -7,13 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.service.Myservice;
 
 public class MyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-       context.sendBroadcast(new Intent("Music")
-               .putExtra("actioname",intent.getAction()));
-
+      int actionmusic = intent.getIntExtra(Constant.ActionMusic_BroadcastReceiver_name,0);
+      Intent intentService = new Intent(context, Myservice.class);
+      intentService.putExtra(Constant.ActionMusic_BroadcastReceiver_int,actionmusic);
+      context.startService(intentService);
     }
 }

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
@@ -62,7 +63,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
         }
         Intent intent  = new Intent(mContext, PlayMusicActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Song",podcast);
+        bundle.putSerializable(Constant.StartMusic,podcast);
         intent.putExtras(bundle);
         mContext.startActivity(intent);
     }

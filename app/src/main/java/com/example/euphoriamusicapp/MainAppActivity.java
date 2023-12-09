@@ -141,11 +141,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                Bundle bundle = new Bundle();
-
-                //bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -153,11 +148,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                Bundle bundle = new Bundle();
-
-                   // bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -165,12 +155,7 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                Bundle bundle = new Bundle();
 
-                   // bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-
-
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -178,12 +163,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                Bundle bundle = new Bundle();
-
-                  //  bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-
-
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -191,11 +170,6 @@ public class MainAppActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                Bundle bundle = new Bundle();
-
-                    //bundle.putSerializable("mainAppSong",PlayMusicActivity.basicMusicInformation);
-
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

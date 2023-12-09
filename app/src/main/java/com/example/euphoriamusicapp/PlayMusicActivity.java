@@ -3,18 +3,18 @@ package com.example.euphoriamusicapp;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -24,21 +24,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.adapter.PodcastAdapter;
 import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.fragment.HomeFragment;
 import com.example.euphoriamusicapp.service.Myservice;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayMusicActivity extends AppCompatActivity {
-    public static final String CHANNEL_ID = "EUPHORIA_APP_MUSIC";
+public class PlayMusicActivity extends AppCompatActivity{
+
     private ImageButton ibBack;
     private CircleImageView imgSong;
     private TextView tvTatolTime, tvCurrentTime, tvPlayMusicSongName, tvPlayMusicArtistName;
@@ -49,12 +47,38 @@ public class PlayMusicActivity extends AppCompatActivity {
     private ImageButton ibPrevious;
     private ImageButton ibNext;
     private ImageButton ibRepeat;
-    public static MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer ;
     public static MusicAndPodcast musicAndPodcast;
     private Handler handler = new Handler();
     private final int PREVIOUS = -1;
     private final int NEXT = 1;
+    private boolean isPlaying;
     NotificationManager notificationManager;
+
+    private void handleActionMusic(int action) {
+        switch (action){
+            case Constant.ACTION_PAUSE:
+                handler.removeCallbacks(updater);
+                mediaPlayer.pause();
+                ibPlay.setImageResource(R.drawable.stop_icon_1);
+                stopAnimation();
+                break;
+            case Constant.ACTION_RESUME:
+                mediaPlayer.start();
+                ibPlay.setImageResource(R.drawable.stop_icon_2);
+                updateSeekbar();
+                startAnimation();
+                break;
+            case Constant.ACTION_PRE:
+                ListSongorPodcast(PREVIOUS);
+                startServiceMusic();
+                break;
+            case Constant.ACTION_NEXT:
+                ListSongorPodcast(NEXT);
+                startServiceMusic();
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +97,13 @@ public class PlayMusicActivity extends AppCompatActivity {
         ibFavourite = findViewById(R.id.ibFavourite);
         ibRepeat = findViewById(R.id.ibRepeat);
         sbTimelineMusic.setMax(100);
-        mediaPlayer = new MediaPlayer();
+        if(mediaPlayer == null){
+            mediaPlayer = new MediaPlayer();
+        }
         //receive data từ homfracment
         Bundle bundle = getIntent().getExtras();
-        if (bundle.get("Song") != null) {
-            musicAndPodcast = (MusicAndPodcast) bundle.get("Song");
+        if (bundle != null) {
+            musicAndPodcast = (MusicAndPodcast) bundle.get(Constant.StartMusic);
             prepareMediaPlayer(musicAndPodcast.getUrl());
             tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
             tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
@@ -86,8 +112,17 @@ public class PlayMusicActivity extends AppCompatActivity {
                     .load(musicAndPodcast.getImage())
                     .into(imgSong);
         } else {
-
+            tvTatolTime.setText(milliSecordsToTimer(mediaPlayer.getDuration()));
+            tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
+            tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
+            Glide
+                    .with(this)
+                    .load(musicAndPodcast.getImage())
+                    .into(imgSong);
+            ibPlay.setImageResource(R.drawable.stop_icon_2);
             tvCurrentTime.setText(milliSecordsToTimer(mediaPlayer.getCurrentPosition()));
+            updateSeekbar();
+            startAnimation();
         }
 
         ibBack.setOnClickListener(new View.OnClickListener() {
@@ -104,12 +139,14 @@ public class PlayMusicActivity extends AppCompatActivity {
                     handler.removeCallbacks(updater);
                     mediaPlayer.pause();
                     ibPlay.setImageResource(R.drawable.stop_icon_1);
+                    startServiceMusic();
                     stopAnimation();
                 } else {
                     mediaPlayer.start();
                     ibPlay.setImageResource(R.drawable.stop_icon_2);
                     updateSeekbar();
                     startAnimation();
+                    startServiceMusic();
                 }
             }
         });
@@ -118,6 +155,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (musicAndPodcast.isLatest()) {
                     ListSongorPodcast(NEXT);
+                    startServiceMusic();
                 } else {
                     Toast.makeText(PlayMusicActivity.this, "Dánh sách phát đã hết!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -127,10 +165,11 @@ public class PlayMusicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ListSongorPodcast(PREVIOUS);
+                startServiceMusic();
             }
         });
         sbTimelineMusic.setOnTouchListener(new View.OnTouchListener() {
-            @Override
+                @Override
             public boolean onTouch(View v, MotionEvent event) {
                 SeekBar seekBar = (SeekBar) v;
                 int playPosition = (mediaPlayer.getDuration() / 100) * seekBar.getProgress();
@@ -173,40 +212,44 @@ public class PlayMusicActivity extends AppCompatActivity {
                             mediaPlayer.reset();
                             prepareMediaPlayer(musicAndPodcast.getUrl());
                         } else {
-                            ListSongorPodcast(NEXT);
+                            if(bundle!=null ){
+                                ListSongorPodcast(NEXT);
+                            }
+
                         }
                     }
                 }, 1000);
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChanel();
-        }
-        int pos;
-        if (musicAndPodcast.getType() == HomeFragment.SONG) {
-            pos = getPosition(RecentListenAdapter.basicMusicInformationList);
-            CreateNotification.createNotification(PlayMusicActivity.this, musicAndPodcast, R.drawable.anh_dau_muon_thay_em_buon_image, pos, RecentListenAdapter.basicMusicInformationList.size() - 1);
-        }
-        else
-        {
-            pos = getPosition(PodcastAdapter.podcastList);
-            CreateNotification.createNotification(PlayMusicActivity.this,musicAndPodcast,R.drawable.ic_play_arrow_24,pos,PodcastAdapter.podcastList.size()-1);
-        }
 
-}
-
-    private void createChanel() {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel channel = new NotificationChannel(CreateNotification.CHANNEL_ID,
-                    "euphoriaMusic", NotificationManager.IMPORTANCE_LOW);
-            notificationManager = getSystemService(NotificationManager.class);
-            if(notificationManager!= null){
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-
+    startServiceMusic();
+    createChanelNotification();
+    LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter(Constant.Send_Data_To_PlayMusic));
     }
+
+    private void createChanelNotification() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel(Constant.CHANNEL_ID,
+                    "Service Music",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setSound(null,null);
+            NotificationManager manager =   getSystemService(NotificationManager.class);
+            if(manager!= null){
+                manager.createNotificationChannel(channel);
+            }
+
+        }
+    }
+
+    private void startServiceMusic() {
+        Intent intent = new Intent(this, Myservice.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("audio",musicAndPodcast);
+        intent.putExtras(bundle);
+        startService(intent);
+    }
+
 
     private void repeatAll(List<MusicAndPodcast> listSong) {
         mediaPlayer.reset();
@@ -218,17 +261,6 @@ public class PlayMusicActivity extends AppCompatActivity {
                 .into(imgSong);
         musicAndPodcast = listSong.get(0);
         prepareMediaPlayer(listSong.get(0).getUrl());
-    }
-
-    private void CreateNotification() {
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationChannel  channel =  new NotificationChannel(CHANNEL_ID,"PlayMusic", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager =getSystemService(NotificationManager.class);
-            if(notificationManager != null){
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
     }
 
 
@@ -340,7 +372,7 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     };
     private void updateSeekbar(){
-        if(mediaPlayer.isPlaying()){
+        if(mediaPlayer!= null && mediaPlayer.isPlaying()){
             sbTimelineMusic.setProgress((int)(((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100));
             handler.postDelayed(updater,1000);
         }
@@ -381,9 +413,24 @@ public class PlayMusicActivity extends AppCompatActivity {
     private void stopAnimation(){
         imgSong.animate().cancel();
     }
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(bundle ==null){
+                return;
+            }
+            isPlaying = bundle.getBoolean(Constant.Action_play_music_service_toPlayMusic_Boolean);
+            int action = bundle.getInt(Constant.Action_play_music_service_toPlayMusic_int);
+            handleActionMusic(action);
+        }
+    };
     @Override
     protected void onDestroy() {
         super.onDestroy();
         miniLayoutmainapp();
+
     }
+
+
 }

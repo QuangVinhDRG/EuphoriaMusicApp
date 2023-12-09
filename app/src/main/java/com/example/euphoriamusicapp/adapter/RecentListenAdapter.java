@@ -17,9 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -69,10 +72,14 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
     }
 
     private void onClickgotoPlaymusic(MusicAndPodcast basicMusicInformation,int p) {
-        if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()){
-            PlayMusicActivity.mediaPlayer.reset();
+        if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+            PlayMusicActivity.mediaPlayer.release();
+            PlayMusicActivity.mediaPlayer = null;
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        firebaseDatabase.getReference().child("recent_music").child(user.getUid()).child(basicMusicInformation.getSongName()).setValue(basicMusicInformation);
         DatabaseReference databaseReference = firebaseDatabase.getReference("songs/"+(p+1)+"/count");
         basicMusicInformation.setCount(basicMusicInformation.getCount() + 1);
         databaseReference.setValue(basicMusicInformation.getCount(), new DatabaseReference.CompletionListener() {
@@ -80,11 +87,12 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
             public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
                 Intent intent  = new Intent(mContext, PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Song",basicMusicInformation);
+                bundle.putSerializable(Constant.StartMusic,basicMusicInformation);
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }
         });
+
 
     }
 
