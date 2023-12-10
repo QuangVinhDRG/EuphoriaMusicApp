@@ -73,8 +73,7 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
 
     private void onClickgotoPlaymusic(MusicAndPodcast basicMusicInformation,int p) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
-            PlayMusicActivity.mediaPlayer.release();
-            PlayMusicActivity.mediaPlayer = null;
+            PlayMusicActivity.mediaPlayer.reset();
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

@@ -1,6 +1,9 @@
 package com.example.euphoriamusicapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,12 +16,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 
 import com.bumptech.glide.Glide;
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.adapter.MainAppAdapter;
 
+import com.example.euphoriamusicapp.service.Myservice;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,7 +54,7 @@ public class MainAppActivity extends AppCompatActivity {
         llInfoMiniPlaySong = findViewById(R.id.llInfoMiniPlaySong);
         civSongImage = findViewById(R.id.civSongImage);
         ibPlay = findViewById(R.id.ibPlayminimusic);
-        if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() ){
+        if((PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() )|| PlayMusicActivity.isPlaying){
             layoutMiniPlayMusic.setVisibility(View.VISIBLE);
             //KHOI TAO MINI LAYOUT
             tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
@@ -62,17 +68,25 @@ public class MainAppActivity extends AppCompatActivity {
 
             layoutMiniPlayMusic.setVisibility(View.GONE);
             }
-
-
         ibPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(PlayMusicActivity.mediaPlayer.isPlaying()){
                     PlayMusicActivity.mediaPlayer.pause();
                     ibPlay.setImageResource(R.drawable.play_icon);
+                    Intent intent = new Intent(MainAppActivity.this, Myservice.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("audio",PlayMusicActivity.musicAndPodcast);
+                    intent.putExtras(bundle);
+                    startService(intent);
                 }else{
                     PlayMusicActivity.mediaPlayer.start();
                     ibPlay.setImageResource(R.drawable.pause_button);
+                    Intent intent = new Intent(MainAppActivity.this, Myservice.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("audio",PlayMusicActivity.musicAndPodcast);
+                    intent.putExtras(bundle);
+                    startService(intent);
                 }
             }
         });
@@ -173,11 +187,56 @@ public class MainAppActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter(Constant.Send_Data_To_PlayMusic));
+    }
+    public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(bundle ==null){
+                return;
+            }
+            PlayMusicActivity.isPlaying = bundle.getBoolean(Constant.Action_play_music_service_toPlayMusic_Boolean);
+            int action = bundle.getInt(Constant.Action_play_music_service_toPlayMusic_int);
+            handleActionMusic(action);
+        }
+    };
+
+    private void handleActionMusic(int action) {
+
+            switch (action){
+                case Constant.ACTION_PAUSE:
+                    ibPlay.setImageResource(R.drawable.play_icon);
+                    break;
+                case Constant.ACTION_RESUME:
+                    ibPlay.setImageResource(R.drawable.pause_button);
+                    break;
+                case Constant.ACTION_PRE:
+                    tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
+                    tvMiniPlaySongName.setText(PlayMusicActivity.musicAndPodcast.getSongName());
+                    Glide
+                            .with(this)
+                            .load(PlayMusicActivity.musicAndPodcast.getImage())
+                            .into(civSongImage);
+                    break;
+                case  Constant.ACTION_NEXT:
+                    ShowInfor();
+                    break;
+
+            }
+    }
+    private void ShowInfor(){
+        tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
+        tvMiniPlaySongName.setText(PlayMusicActivity.musicAndPodcast.getSongName());
+        Glide
+                .with(this)
+                .load(PlayMusicActivity.musicAndPodcast.getImage())
+                .into(civSongImage);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        unregisterReceiver(broadcastReceiver);
     }
 }

@@ -67,7 +67,7 @@ public class Myservice extends Service {
         remoteViews.setOnClickPendingIntent(R.id.imPre,getPendingIntent(this,Constant.ACTION_PRE));
         if(PlayMusicActivity.mediaPlayer.isPlaying() && PlayMusicActivity.mediaPlayer!= null){
             remoteViews.setOnClickPendingIntent(R.id.imPlay,getPendingIntent(this,Constant.ACTION_PAUSE));
-            remoteViews.setImageViewResource(R.id.imPlay,R.drawable.pause_button_notification);
+            remoteViews.setImageViewResource(R.id.imPlay,R.drawable.ic_pause_24);
         }else{
             remoteViews.setOnClickPendingIntent(R.id.imPlay,getPendingIntent(this,Constant.ACTION_RESUME));
             remoteViews.setImageViewResource(R.id.imPlay,R.drawable.ic_play_arrow_24);
@@ -175,7 +175,6 @@ public class Myservice extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
     }
     private void sendActiontoPlayMusicActivity(int action){
         Intent intent =  new Intent(Constant.Send_Data_To_PlayMusic);
@@ -184,6 +183,6 @@ public class Myservice extends Service {
         bundle.putInt(Constant.Action_play_music_service_toPlayMusic_int,action);
         bundle.putSerializable(Constant.ActionMusic_BroadcastReceiver_Object,musicAndPodcastService);
         intent.putExtras(bundle);
-        LocalBroadcastManager .getInstance(this).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

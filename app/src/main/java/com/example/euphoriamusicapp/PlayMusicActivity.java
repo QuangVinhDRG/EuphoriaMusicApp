@@ -2,18 +2,25 @@ package com.example.euphoriamusicapp;
 
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,7 +59,7 @@ public class PlayMusicActivity extends AppCompatActivity{
     private Handler handler = new Handler();
     private final int PREVIOUS = -1;
     private final int NEXT = 1;
-    private boolean isPlaying;
+    public static boolean isPlaying;
     NotificationManager notificationManager;
 
     private void handleActionMusic(int action) {
@@ -129,9 +136,15 @@ public class PlayMusicActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 miniLayoutmainapp();
+               // unregisterReceiver(broadcastReceiver);
             }
         });
-
+        ibFavourite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPermission();
+            }
+        });
         ibPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,6 +241,45 @@ public class PlayMusicActivity extends AppCompatActivity{
     LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter(Constant.Send_Data_To_PlayMusic));
     }
 
+    private void checkPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED){
+                String[] pemisson = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(pemisson, Constant.REQUEST_PERMISSON_CODE);
+            }else {
+                startDownLoadFile();
+            }
+        }else{
+            startDownLoadFile();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(Constant.REQUEST_PERMISSON_CODE == requestCode){
+            if(grantResults.length > 0 && grantResults[0] ==PackageManager.PERMISSION_GRANTED){
+                startDownLoadFile();
+            }else{
+                Toast.makeText(this, "Pemission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startDownLoadFile() {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(musicAndPodcast.getUrl()));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        request.setTitle("Download Song");
+        request.setDescription("Download file ...");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC , String.valueOf(System.currentTimeMillis()));
+
+        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        if(downloadManager!= null){
+            downloadManager.enqueue(request);
+        }
+
+    }
+
     private void createChanelNotification() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel = new NotificationChannel(Constant.CHANNEL_ID,
@@ -242,7 +294,7 @@ public class PlayMusicActivity extends AppCompatActivity{
         }
     }
 
-    private void startServiceMusic() {
+    public void startServiceMusic() {
         Intent intent = new Intent(this, Myservice.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("audio",musicAndPodcast);
@@ -345,8 +397,6 @@ public class PlayMusicActivity extends AppCompatActivity{
                     .into(imgSong);
             musicAndPodcast = listSong.get(pos-1);
             prepareMediaPlayer(listSong.get(pos - 1).getUrl());
-            }else{
-
             }
 
     }
@@ -413,7 +463,7 @@ public class PlayMusicActivity extends AppCompatActivity{
     private void stopAnimation(){
         imgSong.animate().cancel();
     }
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
@@ -429,7 +479,7 @@ public class PlayMusicActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         miniLayoutmainapp();
-
+       // unregisterReceiver(broadcastReceiver);
     }
 
 

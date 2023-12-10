@@ -5,6 +5,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
+import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.LibraryAdapter;
 import com.example.euphoriamusicapp.adapter.ViewPagerPlaylistTabAdapter;
@@ -99,6 +102,11 @@ public class PlaylistFragment extends Fragment {
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
                     fragmentTransaction.commit();
+                } else if (position == 2) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), PlayMusicOfflineActivity.class);
+                    getActivity().startActivity(intent);
+
                 }
             }
         });

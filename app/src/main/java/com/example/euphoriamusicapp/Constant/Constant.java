@@ -20,4 +20,6 @@ public class Constant {
     public static final String Action_play_music_service_toPlayMusic_Boolean = "Action_play_music_service_toPlayMusic_boolean";
     public static final String Action_play_music_service_toPlayMusic_int = "Action_play_music_service_toPlayMusic_int";
 
+    public static final int REQUEST_PERMISSON_CODE = 14;
+    public static final int REQUEST_READ_STORAGE_PERMISSION = 1;
 }
