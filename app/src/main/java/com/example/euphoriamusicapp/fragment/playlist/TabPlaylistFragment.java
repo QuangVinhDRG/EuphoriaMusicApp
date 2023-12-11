@@ -119,7 +119,7 @@ public class TabPlaylistFragment extends Fragment {
 
     private List<Playlist> getPlaylists() {
         List<Playlist> list = new ArrayList<>();
-        list.add(new Playlist(R.drawable.playlist_1, "Top bài hát hay nhất của Văn Mai Hương", "Văn Mai Hương"));
+
         return list;
     }
 }
