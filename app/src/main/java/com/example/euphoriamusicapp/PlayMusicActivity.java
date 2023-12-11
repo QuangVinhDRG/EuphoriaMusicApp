@@ -37,7 +37,13 @@ import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.fragment.HomeFragment;
 import com.example.euphoriamusicapp.service.Myservice;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -243,8 +249,9 @@ public class PlayMusicActivity extends AppCompatActivity{
 
     private void checkPermission() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED){
-                String[] pemisson = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                String[] pemisson = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
                 requestPermissions(pemisson, Constant.REQUEST_PERMISSON_CODE);
             }else {
                 startDownLoadFile();
@@ -268,16 +275,32 @@ public class PlayMusicActivity extends AppCompatActivity{
     private void startDownLoadFile() {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(musicAndPodcast.getUrl()));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
-        request.setTitle("Download Song");
+        request.setTitle("Download " + musicAndPodcast.getSongName());
         request.setDescription("Download file ...");
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC , String.valueOf(System.currentTimeMillis()));
-
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_MUSIC , musicAndPodcast.getSongName()+"+"+musicAndPodcast.getAuthorName()+".mp3");
         DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         if(downloadManager!= null){
-            downloadManager.enqueue(request);
-        }
+          //   DatabaseReference databaseReference =
 
+            File musicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+            Boolean checkfileMusic = false;
+            // Kiểm tra xem thư mục có tồn tại không
+            if (musicDirectory.exists() && musicDirectory.isDirectory()) {
+                for (File file:musicDirectory.listFiles()
+                     ) {
+                    if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
+                        if(file.getName().toLowerCase().equals((musicAndPodcast.getSongName()+"+"+musicAndPodcast.getAuthorName()+".mp3").toLowerCase())){
+                            Toast.makeText(this, "File đã được tải xuống", Toast.LENGTH_SHORT).show();
+                            checkfileMusic = true;
+                        }
+                    }
+                }
+                if(!checkfileMusic){
+                    downloadManager.enqueue(request);
+                }
+            }
+        }
     }
 
     private void createChanelNotification() {

@@ -22,4 +22,9 @@ public class Constant {
 
     public static final int REQUEST_PERMISSON_CODE = 14;
     public static final int REQUEST_READ_STORAGE_PERMISSION = 1;
+
+
+    public static final String Connection_key = "Connection_key";
+    public static final String Connection_value = "Connection_value";
+
 }

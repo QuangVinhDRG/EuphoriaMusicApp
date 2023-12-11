@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,12 +34,12 @@ public class MainAppActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
     private LinearLayout layoutMiniPlayMusic;
-    private ImageButton ibAccount;
     private ImageButton ibPlay;
     private TextView tvMiniPlaySongName, tvArtistName;
     private LinearLayout llMiniPlayMusic, llInfoMiniPlaySong;
     private CircleImageView civSongImage;
     private RelativeLayout rlMainApp;
+    String s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,9 @@ public class MainAppActivity extends AppCompatActivity {
         llInfoMiniPlaySong = findViewById(R.id.llInfoMiniPlaySong);
         civSongImage = findViewById(R.id.civSongImage);
         ibPlay = findViewById(R.id.ibPlayminimusic);
-        if((PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() )|| PlayMusicActivity.isPlaying){
+        Intent intent = getIntent();
+        s = intent.getStringExtra(Constant.Connection_key);
+        if((PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying() )|| PlayMusicActivity.isPlaying||(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() )|| PlayMusicActivity.isPlaying){
             layoutMiniPlayMusic.setVisibility(View.VISIBLE);
             //KHOI TAO MINI LAYOUT
             tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
@@ -117,24 +120,44 @@ public class MainAppActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.menuPlaylist) {
-                    viewPager2.setCurrentItem(0, false);
-                } else if (item.getItemId() == R.id.menuSearch) {
-                    viewPager2.setCurrentItem(1, false);
-                } else if (item.getItemId() == R.id.menuHome) {
-                    viewPager2.setCurrentItem(2, false);
-                } else if (item.getItemId() == R.id.menuRank) {
-                    viewPager2.setCurrentItem(3, false);
-                } else if (item.getItemId() == R.id.menuAccount) {
-                    viewPager2.setCurrentItem(4, false);
+                if (s != null && s.equals(Constant.Connection_value)) {
+                    if (item.getItemId() == R.id.menuPlaylist) {
+                        viewPager2.setCurrentItem(0, false);
+                    }else {
+                        Toast.makeText(MainAppActivity.this, "Vui lòng kết nối mạng", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    if (item.getItemId() == R.id.menuPlaylist) {
+                        viewPager2.setCurrentItem(0, false);
+                    } else if (item.getItemId() == R.id.menuSearch) {
+                        viewPager2.setCurrentItem(1, false);
+                    } else if (item.getItemId() == R.id.menuHome) {
+                        viewPager2.setCurrentItem(2, false);
+                    } else if (item.getItemId() == R.id.menuRank) {
+                        viewPager2.setCurrentItem(3, false);
+                    } else if (item.getItemId() == R.id.menuAccount) {
+                        viewPager2.setCurrentItem(4, false);
+                    }
                 }
+
                 return true;
             }
         });
         viewPager2.setUserInputEnabled(false);
-        if (savedInstanceState == null) {
-            bottomNavigationView.setSelectedItemId(R.id.menuHome);
+
+
+        if (s != null && s.equals(Constant.Connection_value)) {
+            // Set BottomNavigationView to "menuPlaylist" only if the condition is true
+            if (savedInstanceState == null) {
+                bottomNavigationView.setSelectedItemId(R.id.menuPlaylist);
+            }
+        } else {
+            // Set BottomNavigationView to "menuHome" if the condition is not true
+            if (savedInstanceState == null) {
+                bottomNavigationView.setSelectedItemId(R.id.menuHome);
+            }
         }
+
 
         try {
             InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);

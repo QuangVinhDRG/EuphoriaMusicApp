@@ -9,15 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.RankingMusic;
 
 import java.util.List;
 
 public class RankingMusicAdapter extends BaseAdapter {
-    private List<RankingMusic> rankingMusicList;
+    private List<MusicAndPodcast> rankingMusicList;
 
-    public RankingMusicAdapter(List<RankingMusic> rankingMusicList) {
+    public RankingMusicAdapter(List<MusicAndPodcast> rankingMusicList) {
         this.rankingMusicList = rankingMusicList;
     }
 
@@ -43,26 +45,15 @@ public class RankingMusicAdapter extends BaseAdapter {
         ImageView ivRankingSongImage = view.findViewById(R.id.ivRankingSongImage);
         TextView tvRankingSongName = view.findViewById(R.id.tvRankingSongName);
         TextView tvRankingSongAuthor = view.findViewById(R.id.tvRankingSongAuthor);
-        RankingMusic rankingMusic = rankingMusicList.get(position);
-        if (rankingMusic.getRanking() == 0) {
-            tvRankingNumber.setText("Gợi ý");
-            tvRankingNumber.setTextColor(Color.parseColor("#F62A2A"));
-            tvRankingNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 7);
-        } else {
-            tvRankingNumber.setText(String.valueOf(rankingMusic.getRanking()));
-        }
-        ivRankingSongImage.setImageResource(rankingMusic.getResourceId());
+        MusicAndPodcast rankingMusic = rankingMusicList.get(position);
+        tvRankingNumber.setText(String.valueOf(position+1));
+        Glide
+                .with(ivRankingSongImage)
+                .load(rankingMusic.getImage())
+                .into(ivRankingSongImage);
         tvRankingSongName.setText(rankingMusic.getSongName());
         tvRankingSongAuthor.setText(rankingMusic.getAuthorName());
-        if (rankingMusic.getRanking() == 1) {
-            tvRankingNumber.setTextColor(Color.parseColor("#6D0AEE"));
-        }
-        if (rankingMusic.getRanking() == 2) {
-            tvRankingNumber.setTextColor(Color.parseColor("#409895"));
-        }
-        if (rankingMusic.getRanking() == 3) {
-            tvRankingNumber.setTextColor(Color.parseColor("#F62A2A"));
-        }
+
         return view;
     }
 }

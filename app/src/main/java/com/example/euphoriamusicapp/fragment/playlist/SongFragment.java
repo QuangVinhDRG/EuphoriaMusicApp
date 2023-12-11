@@ -1,9 +1,15 @@
 package com.example.euphoriamusicapp.fragment.playlist;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +22,8 @@ import com.example.euphoriamusicapp.adapter.FavouriteSongAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.RankingMusic;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,9 +86,10 @@ public class SongFragment extends Fragment {
         lvFavouriteSong = view.findViewById(R.id.lvFavouriteSong);
         tvFavouriteNumberOfSong = view.findViewById(R.id.tvFavouriteNumberOfSong);
         ibBack = view.findViewById(R.id.ibBack);
-        FavouriteSongAdapter favouriteSongAdapter = new FavouriteSongAdapter(getFavouriteMusicList());
+        FavouriteSongAdapter favouriteSongAdapter = new FavouriteSongAdapter(getFavouriteMusicList(),getContext());
         tvFavouriteNumberOfSong.setText(String.valueOf(favouriteSongAdapter.getCount()));
         lvFavouriteSong.setAdapter(favouriteSongAdapter);
+        getMusicFiles();
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,8 +100,61 @@ public class SongFragment extends Fragment {
     }
 
     public List<MusicAndPodcast> getFavouriteMusicList() {
+        File[] listfile = getMusicFiles();
         List<MusicAndPodcast> list = new ArrayList<>();
+        for ( File file: listfile
+        ) {
+            MusicAndPodcast p1 = new MusicAndPodcast() ;
 
+            if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
+                String[] chuoi = file.getName().split("\\+");
+                String songname ="";
+                String songauthor="";
+                if (chuoi.length >= 2) {
+                    songname = chuoi[0];
+                    songauthor = chuoi[1];
+                    songauthor = songauthor.replace(".mp3","");
+                }
+               p1.setUrl(file.getAbsolutePath());
+               p1.setAuthorName(songauthor);
+               p1.setSongName(songname);
+               p1.setResourceId(R.drawable.imgsong);
+               p1.setFeatured(true);
+               p1.setLatest(true);
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(file.getAbsolutePath());
+                byte[] imageData = retriever.getEmbeddedPicture();
+
+                if (imageData != null) {
+                    // Chuyển đổi dữ liệu hình ảnh thành Bitmap và hiển thị nó trong ImageView
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                    p1.setImage(bitmapToString(bitmap));
+                }
+               list.add(p1);
+            }
+
+        }
+        list.get(0).setFeatured(false);
+        list.get(list.size() - 1).setLatest(false);
         return list;
     }
+    private static File[] getMusicFiles() {
+        File musicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
+        // Kiểm tra xem thư mục có tồn tại không
+        if (musicDirectory.exists() && musicDirectory.isDirectory()) {
+            return musicDirectory.listFiles();
+        } else {
+            return null;
+        }
+    }
+    public static String bitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
+
+
 }

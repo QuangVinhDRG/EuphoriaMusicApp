@@ -71,8 +71,8 @@ public class TabActivityFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab_activity, container, false);
         lvActivity = view.findViewById(R.id.lvActivity);
-        RankingMusicAdapter activityMusicAdapter = new RankingMusicAdapter(getActivityMusicList());
-        lvActivity.setAdapter(activityMusicAdapter);
+    //    RankingMusicAdapter activityMusicAdapter = new RankingMusicAdapter(getActivityMusicList());
+      //  lvActivity.setAdapter(activityMusicAdapter);
         return view;
     }
 

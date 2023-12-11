@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -84,14 +85,16 @@ public class ResetPasswordEmailActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     boolean Ischeck = false;
                     for ( DataSnapshot data : snapshot.getChildren()) {
-                        user tuancho =  data.getValue(user.class);
-                        if(tuancho.getEmail()==edtEmail.getText().toString())
+                        user acc =  data.getValue(user.class);
+
+                        if(acc.getEmail().equals(edtEmail.getText().toString()))
                         {
                             Ischeck = true;
+                            Log.d("hiiihi", "onDataChange: ");
                             break;
                         }
                     }
-                    if( Ischeck){
+                    if(Ischeck){
                         mAuth.sendPasswordResetEmail(edtEmail.getText().toString())
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override

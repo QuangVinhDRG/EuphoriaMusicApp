@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -23,14 +24,17 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
+import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.LibraryAdapter;
 import com.example.euphoriamusicapp.adapter.ViewPagerPlaylistTabAdapter;
 import com.example.euphoriamusicapp.data.Library;
 import com.example.euphoriamusicapp.fragment.playlist.SongFragment;
+import com.example.euphoriamusicapp.fragment.playlist.TabRecentFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -57,7 +61,7 @@ public class PlaylistFragment extends Fragment {
     private ViewPager vpPlaylist;
     private ImageButton ibAccount;
     private EditText etPlaylistSearch;
-
+    private LinearLayout layoutMiniPlayMusic;
     public PlaylistFragment() {
         // Required empty public constructor
     }
@@ -84,8 +88,8 @@ public class PlaylistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_playlist, container, false);
+        // Inflate the layout for this fragment
         gvLibrary = view.findViewById(R.id.gvLibrary);
         tlPlaylist = view.findViewById(R.id.tlPlaylist);
         vpPlaylist = view.findViewById(R.id.vpPlaylist);
@@ -103,10 +107,10 @@ public class PlaylistFragment extends Fragment {
                     fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
                     fragmentTransaction.commit();
                 } else if (position == 2) {
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), PlayMusicOfflineActivity.class);
-                    getActivity().startActivity(intent);
 
+                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
+                    fragmentTransaction.commit();
                 }
             }
         });
@@ -120,6 +124,7 @@ public class PlaylistFragment extends Fragment {
                 }
             }
         });
+
 
 //        ibAccount = view.findViewById(R.id.ibAccount);
 //        ViewGroup viewGroup = view.getRootView().findViewById(R.id.menuPlaylist);

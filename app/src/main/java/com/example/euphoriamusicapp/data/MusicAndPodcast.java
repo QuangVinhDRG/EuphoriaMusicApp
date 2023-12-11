@@ -15,7 +15,11 @@ public class MusicAndPodcast implements  Serializable{
 
     public MusicAndPodcast() {
     }
-
+    public MusicAndPodcast(int resourceId, String songName, String authorName) {
+        this.resourceId = resourceId;
+        this.songName = songName;
+        this.authorName = authorName;
+    }
     public MusicAndPodcast(int resourceId, String songName, String authorName, String image, String url, boolean latest, boolean featured, int count, int type) {
         this.resourceId = resourceId;
         this.songName = songName;

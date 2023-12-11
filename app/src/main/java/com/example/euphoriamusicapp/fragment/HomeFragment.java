@@ -206,7 +206,25 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        databaseReference = firebaseDatabase.getReference("songs");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(listSong != null){
+                    listSong.clear();
+                }
+                for (DataSnapshot data: snapshot.getChildren()) {
+                    MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    listSong.add(song);
+                }
+                rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
