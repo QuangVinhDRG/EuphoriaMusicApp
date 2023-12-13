@@ -101,7 +101,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot data : snapshot.getChildren()) {
                     TopicAndCategory topicAndCategory = data.getValue(TopicAndCategory.class);
-                    if(topicAndCategory.getType() == HomeFragment.SONG){
+                   if(topicAndCategory.getType() == HomeFragment.SONG){
                         categories.add(topicAndCategory.getTopicAndCategoryName());
                     }
                 }

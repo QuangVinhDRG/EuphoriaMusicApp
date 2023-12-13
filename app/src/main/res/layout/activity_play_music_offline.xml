@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlayMusicOfflineActivity"
-    android:background="#4D000000">
+    android:background="#4D000000"
+    android:id="@+id/RLPlaymuisc">
     <RelativeLayout
         android:id="@+id/headerBar"
         android:layout_width="match_parent"

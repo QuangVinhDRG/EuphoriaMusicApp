@@ -18,8 +18,8 @@ import com.example.euphoriamusicapp.data.Playlist;
 import java.util.List;
 
 public class PlaylistTabAdapter extends BaseAdapter {
-    private List<Playlist> playlists;
-    public PlaylistTabAdapter(List<Playlist> playlists) {
+    private List<String> playlists;
+    public PlaylistTabAdapter(List<String> playlists) {
         this.playlists = playlists;
     }
 
@@ -42,13 +42,11 @@ public class PlaylistTabAdapter extends BaseAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.playlist_item, parent, false);
-        ImageView ivPlaylistImage = view.findViewById(R.id.ivPlaylistImage);
         TextView tvPlaylistName = view.findViewById(R.id.tvPlaylistName);
         TextView tvPlaylistAuthor = view.findViewById(R.id.tvPlaylistAuthor);
-        Playlist playlist = playlists.get(position);
-        ivPlaylistImage.setImageResource(playlist.getResourceId());
-        tvPlaylistName.setText(playlist.getPlaylistName());
-        tvPlaylistAuthor.setText(playlist.getPlaylistAuthor());
+        String playlist = playlists.get(position);
+        tvPlaylistName.setText(playlist);
+        tvPlaylistAuthor.setText("0 bài hát");
         return view;
     }
 }

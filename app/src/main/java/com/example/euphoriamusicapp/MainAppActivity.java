@@ -36,10 +36,10 @@ public class MainAppActivity extends AppCompatActivity {
     private LinearLayout layoutMiniPlayMusic;
     private ImageButton ibPlay;
     private TextView tvMiniPlaySongName, tvArtistName;
-    private LinearLayout llMiniPlayMusic, llInfoMiniPlaySong;
     private CircleImageView civSongImage;
     private RelativeLayout rlMainApp;
     String s;
+    public  static int currentList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,27 +48,27 @@ public class MainAppActivity extends AppCompatActivity {
         rlMainApp = findViewById(R.id.rlMainApp);
         viewPager2 = findViewById(R.id.viewPagerMain);
         bottomNavigationView = findViewById(R.id.bottomNavigation);
-        layoutMiniPlayMusic = findViewById(R.id.miniPlayMusic);
+        layoutMiniPlayMusic = findViewById(R.id.llMiniPlayMusic);
         tvMiniPlaySongName = findViewById(R.id.tvMiniPlaySongName);
         tvArtistName = findViewById(R.id.tvArtistName);
-        llMiniPlayMusic = findViewById(R.id.llMiniPlayMusic);
-        llInfoMiniPlaySong = findViewById(R.id.llInfoMiniPlaySong);
         civSongImage = findViewById(R.id.civSongImage);
         ibPlay = findViewById(R.id.ibPlayminimusic);
         Intent intent = getIntent();
         s = intent.getStringExtra(Constant.Connection_key);
+
         if((PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying() )|| PlayMusicActivity.isPlaying||(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() )|| PlayMusicActivity.isPlaying){
             layoutMiniPlayMusic.setVisibility(View.VISIBLE);
             //KHOI TAO MINI LAYOUT
+            currentList = PlayMusicActivity.checkList;
             tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
             tvMiniPlaySongName.setText(PlayMusicActivity.musicAndPodcast.getSongName());
             Glide
                     .with(this)
                     .load(PlayMusicActivity.musicAndPodcast.getImage())
                     .into(civSongImage);
+            LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter(Constant.Send_Data_To_PlayMusic));
         }
         else{
-
             layoutMiniPlayMusic.setVisibility(View.GONE);
             }
         ibPlay.setOnClickListener(new View.OnClickListener() {
@@ -167,50 +167,35 @@ public class MainAppActivity extends AppCompatActivity {
         }
 
 
-//        layoutMiniPlayMusic.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        layoutMiniPlayMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
+                startActivity(intent);
+            }
+        });
         tvMiniPlaySongName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
                 startActivity(intent);
             }
         });
         tvArtistName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-                startActivity(intent);
-            }
-        });
-        llMiniPlayMusic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
-
-                startActivity(intent);
-            }
-        });
-        llInfoMiniPlaySong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
                 startActivity(intent);
             }
         });
         civSongImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainAppActivity.this,PlayMusicActivity.class);
+                Intent intent = new Intent(MainAppActivity.this, PlayMusicActivity.class);
                 startActivity(intent);
             }
         });
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter(Constant.Send_Data_To_PlayMusic));
+
     }
     public BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override

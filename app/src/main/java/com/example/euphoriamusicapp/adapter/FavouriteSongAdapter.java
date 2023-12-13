@@ -50,6 +50,7 @@ public class FavouriteSongAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_song_item, parent, false);
         ImageView ivSongImage = view.findViewById(R.id.ivSongImage);
         TextView tvSongName = view.findViewById(R.id.tvSongName);
@@ -64,6 +65,9 @@ public class FavouriteSongAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
                     PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+                }
+                if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+                    PlayMusicActivity.mediaPlayer.reset();
                 }
                 Intent intent  = new Intent(mContext, PlayMusicOfflineActivity.class);
                 Bundle bundle = new Bundle();

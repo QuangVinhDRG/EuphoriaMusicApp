@@ -2,6 +2,7 @@ package com.example.euphoriamusicapp.fragment.playlist;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +19,13 @@ import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.PlaylistTabAdapter;
 import com.example.euphoriamusicapp.data.Playlist;
 import com.example.euphoriamusicapp.fragment.playlist.playlistTab.NamePlaylistFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +93,8 @@ public class TabPlaylistFragment extends Fragment {
         ibAddPlaylist = view.findViewById(R.id.ibAddPlaylist);
         llAddPlaylistFrame = view.findViewById(R.id.llAddPlaylistFrame);
         tvAddPlaylist = view.findViewById(R.id.tvAddPlaylist);
-        lvPlaylist.setAdapter(new PlaylistTabAdapter(getPlaylists()));
+        getPlaylists();
+
 
         ibAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +126,30 @@ public class TabPlaylistFragment extends Fragment {
         return view;
     }
 
-    private List<Playlist> getPlaylists() {
-        List<Playlist> list = new ArrayList<>();
+    private void getPlaylists() {
+        List<String> list = new ArrayList<>();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("playlist");
 
-        return list;
+        databaseReference.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for ( DataSnapshot data: snapshot.getChildren()
+                     ) {
+                    String name = data.getKey();
+                    list.add(name);
+                }
+                lvPlaylist.setAdapter(new PlaylistTabAdapter(list));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 }

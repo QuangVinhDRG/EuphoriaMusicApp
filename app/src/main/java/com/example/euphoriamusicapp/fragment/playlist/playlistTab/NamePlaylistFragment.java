@@ -3,10 +3,12 @@ package com.example.euphoriamusicapp.fragment.playlist.playlistTab;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.euphoriamusicapp.R;
+import com.example.euphoriamusicapp.data.Playlist;
 import com.example.euphoriamusicapp.fragment.PlaylistFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,6 +99,7 @@ public class NamePlaylistFragment extends Fragment {
             }
         });
 
+
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,11 +109,45 @@ public class NamePlaylistFragment extends Fragment {
         btnAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) btnAddPlaylist.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(btnAddPlaylist.getWindowToken(), 0);
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.namePlaylistFragmentLayout, new ManagePlaylistFragment(), "managePlaylistFragment");
-                fragmentTransaction.commit();
+                if(!etPlaylistName.getText().toString().isEmpty()){
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("playlist");
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    databaseReference.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            boolean checkname = true;
+                            for (DataSnapshot data :snapshot.getChildren()
+                                 ) {
+
+                                String namePlay = data.getKey();
+                                Log.d("namePlay", "onDataChange: "+ namePlay);
+                                if(namePlay.equals(etPlaylistName.getText().toString())){
+                                    checkname = false;
+                                    break;
+                                }
+                            }
+                            if(checkname) {
+                                databaseReference.child(user.getUid()).child(etPlaylistName.getText().toString()).setValue("null");
+                                InputMethodManager inputMethodManager = (InputMethodManager) btnAddPlaylist.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputMethodManager.hideSoftInputFromWindow(btnAddPlaylist.getWindowToken(), 0);
+                                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.namePlaylistFragmentLayout, new ManagePlaylistFragment(), "managePlaylistFragment");
+                                fragmentTransaction.commit();
+                            }else{
+                                Toast.makeText(getContext(), "Tên playlist đã tồn tại", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }else{
+                    Toast.makeText(getContext(), "Vui lòng nhập tên Playlist", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
         btnCancelPlaylist.setOnClickListener(new View.OnClickListener() {

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.ExploreAdapter;
@@ -42,7 +43,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class HomeFragment extends Fragment {
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment {
     private Handler handler = new Handler();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user = mAuth.getCurrentUser();
+    private LinearLayout lLRecentListen;
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -130,6 +133,7 @@ public class HomeFragment extends Fragment {
         rvTrendingArtist = view.findViewById(R.id.rvTrendingArtist);
         rvHotAlbum = view.findViewById(R.id.rvHotAlbum);
         rvTopicCategory = view.findViewById(R.id.rvTopicCategory);
+        lLRecentListen = view.findViewById(R.id.lLRecentListen);
 
 
         homeSliderList = getHomeSliderList();
@@ -143,19 +147,21 @@ public class HomeFragment extends Fragment {
                 handler.postDelayed(runnable, 2000);
             }
         });
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            // Thực hiện truy vấn Firebase ở đây
+            getRecentListenList();
 
-        getRecentListenList();
+            getExploreList();
 
-        getExploreList();
+            getForYouList();
 
-        LinearLayoutManager layoutManagerForYou = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvForYou.setLayoutManager(layoutManagerForYou);
-        rvForYou.setHasFixedSize(true);
-        rvForYou.setAdapter(new ForYouAdapter(getForYouList()));
+            getNewReleaseList();
 
-        getNewReleaseList();
+            getPodcastList();
+        });
 
-        getPodcastList();
+
 
         LinearLayoutManager layoutManagerTrendingArtist = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvTrendingArtist.setLayoutManager(layoutManagerTrendingArtist);
@@ -192,32 +198,21 @@ public class HomeFragment extends Fragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!listSong.isEmpty()){
+                    listSong.clear();
+                }
                 for (DataSnapshot data: snapshot.getChildren()
                 ) {
                     MusicAndPodcast song_url = data.getValue(MusicAndPodcast.class);
                     listSong.add(song_url);
 
                 }
-                rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        databaseReference = firebaseDatabase.getReference("songs");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(listSong != null){
-                    listSong.clear();
+                if(listSong.isEmpty()){
+                    lLRecentListen.setVisibility(View.GONE);
+                }else{
+                    lLRecentListen.setVisibility(View.VISIBLE);
+                    rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
                 }
-                for (DataSnapshot data: snapshot.getChildren()) {
-                    MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
-                    listSong.add(song);
-                }
-                rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
             }
 
             @Override
@@ -236,7 +231,7 @@ public class HomeFragment extends Fragment {
         rvExplore.setLayoutManager(layoutManagerExplore);
         rvExplore.setHasFixedSize(true);
         databaseReference = firebaseDatabase.getReference("songs");
-        Query query =  databaseReference.orderByChild("count").startAt(50);
+        Query query =  databaseReference.orderByChild("count").startAt(10);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -247,7 +242,7 @@ public class HomeFragment extends Fragment {
                     MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
                     list.add(song);
                 }
-                rvExplore.setAdapter(new ExploreAdapter(list));
+                rvExplore.setAdapter(new ExploreAdapter(getContext(),list));
             }
 
             @Override
@@ -260,18 +255,37 @@ public class HomeFragment extends Fragment {
 
 
 
-    private List<ImageOfMusic> getForYouList() {
-        List<ImageOfMusic> list = new ArrayList<>();
-        list.add(new ImageOfMusic(R.drawable.cung_trang_image));
-        list.add(new ImageOfMusic(R.drawable.ngay_mai_nguoi_ta_lay_chong_image));
-        list.add(new ImageOfMusic(R.drawable.mua_thang_sau_image));
-        list.add(new ImageOfMusic(R.drawable.gia_nhu_co_ay_chua_xuat_hien_image));
-        list.add(new ImageOfMusic(R.drawable.tam_y_image));
-        return list;
+    private void getForYouList() {
+        List<MusicAndPodcast> list = new ArrayList<>();
+        LinearLayoutManager layoutManagerForYou = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvForYou.setLayoutManager(layoutManagerForYou);
+        rvForYou.setHasFixedSize(true);
+        databaseReference = firebaseDatabase.getReference("songs");
+        Query query =  databaseReference.limitToLast(10);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(list != null){
+                    list.clear();
+                }
+                for (DataSnapshot data: snapshot.getChildren()) {
+                    MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    list.add(song);
+                }
+                rvForYou.setAdapter(new ForYouAdapter(getContext(),list));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     private void getNewReleaseList() {
-        List<NewReleaseMusic> list = new ArrayList<>();
+        List<MusicAndPodcast> list = new ArrayList<>();
         GridLayoutManager layoutManagerNewRelease = new GridLayoutManager(getContext(), 3, LinearLayoutManager.HORIZONTAL, false);
         rvNewRelease.setLayoutManager(layoutManagerNewRelease);
         rvNewRelease.setHasFixedSize(true);
@@ -284,10 +298,10 @@ public class HomeFragment extends Fragment {
                     list.clear();
                 }
                 for (DataSnapshot data: snapshot.getChildren()) {
-                    NewReleaseMusic  song = data.getValue(NewReleaseMusic.class);
+                    MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
                     list.add(0,song);
                 }
-                rvNewRelease.setAdapter(new NewReleaseAdapter(list));
+                rvNewRelease.setAdapter(new NewReleaseAdapter(getContext(),list));
             }
 
             @Override

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.PlayMusicActivity;
+import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,11 +74,20 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
 
     private void onClickgotoPlaymusic(MusicAndPodcast basicMusicInformation,int p) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
-            PlayMusicActivity.mediaPlayer.reset();
+            PlayMusicActivity.mediaPlayer.release();
+            PlayMusicActivity.mediaPlayer = null;
         }
+        if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
+            PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+        }
+
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        if(!basicMusicInformation.isLatest() ||  !basicMusicInformation.isFeatured()){
+            basicMusicInformation.setLatest(true);
+            basicMusicInformation.setFeatured(true);
+        }
         firebaseDatabase.getReference().child("recent_music").child(user.getUid()).child(basicMusicInformation.getSongName()).setValue(basicMusicInformation);
         DatabaseReference databaseReference = firebaseDatabase.getReference("songs/"+(p+1)+"/count");
         basicMusicInformation.setCount(basicMusicInformation.getCount() + 1);
@@ -87,6 +97,7 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
                 Intent intent  = new Intent(mContext, PlayMusicActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Constant.StartMusic,basicMusicInformation);
+                bundle.putInt(Constant.ListSong,Constant.recent);
                 intent.putExtras(bundle);
                 mContext.startActivity(intent);
             }

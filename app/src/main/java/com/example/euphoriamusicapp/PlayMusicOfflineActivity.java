@@ -1,41 +1,36 @@
 package com.example.euphoriamusicapp;
 
-import static com.example.euphoriamusicapp.Constant.Constant.REQUEST_READ_STORAGE_PERMISSION;
+import static com.example.euphoriamusicapp.PlayMusicActivity.mediaPlayer;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.adapter.FavouriteSongAdapter;
-import com.example.euphoriamusicapp.adapter.PodcastAdapter;
-import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
-import com.example.euphoriamusicapp.fragment.HomeFragment;
 import com.example.euphoriamusicapp.fragment.playlist.SongFragment;
-
-import java.io.File;
-import java.io.IOException;
+import com.example.euphoriamusicapp.service.Myservice;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -57,6 +52,31 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
     private final int PREVIOUS = -1;
     private final int NEXT = 1;
     public static boolean isPlaying;
+    private void handleActionMusic(int action) {
+        switch (action){
+            case Constant.ACTION_PAUSE:
+                handler.removeCallbacks(updater);
+                mediaPlayeroffline.pause();
+                ibPlay.setImageResource(R.drawable.stop_icon_1);
+                stopAnimation();
+
+                break;
+            case Constant.ACTION_RESUME:
+                mediaPlayeroffline.start();
+                ibPlay.setImageResource(R.drawable.stop_icon_2);
+                updateSeekbar();
+                startAnimation();
+                break;
+            case Constant.ACTION_PRE:
+                ListSongorPodcast(PREVIOUS);
+                startServiceMusic();
+                break;
+            case Constant.ACTION_NEXT:
+                ListSongorPodcast(NEXT);
+                startServiceMusic();
+                break;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +94,7 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
         ibFavourite = findViewById(R.id.ibFavourite);
         ibRepeat = findViewById(R.id.ibRepeat);
         sbTimelineMusic.setMax(100);
-        if (mediaPlayeroffline == null) {
-            mediaPlayeroffline = new MediaPlayer();
-        }
+        mediaPlayeroffline = new MediaPlayer();
         //receive data từ homfracment
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -85,13 +103,14 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
             tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
             tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
             imgSong.setImageBitmap(FavouriteSongAdapter.stringToBitmap(musicAndPodcast.getImage()));
-        } else {
-            tvTatolTime.setText(milliSecordsToTimer(mediaPlayeroffline.getDuration()));
+        }else {
+            //mediaPlayer = new MediaPlayer();
+            tvTatolTime.setText(milliSecordsToTimer(mediaPlayer.getDuration()));
             tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
             tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
             imgSong.setImageBitmap(FavouriteSongAdapter.stringToBitmap(musicAndPodcast.getImage()));
             ibPlay.setImageResource(R.drawable.stop_icon_2);
-            tvCurrentTime.setText(milliSecordsToTimer(mediaPlayeroffline.getCurrentPosition()));
+            tvCurrentTime.setText(milliSecordsToTimer(mediaPlayer.getCurrentPosition()));
             updateSeekbar();
             startAnimation();
         }
@@ -99,8 +118,9 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //miniLayoutmainapp();
-                // unregisterReceiver(broadcastReceiver);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.RLPlaymuisc, new SongFragment(), "songFragment");
+                fragmentTransaction.commit();
             }
         });
         ibFavourite.setOnClickListener(new View.OnClickListener() {
@@ -116,11 +136,13 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
                     handler.removeCallbacks(updater);
                     mediaPlayeroffline.pause();
                     ibPlay.setImageResource(R.drawable.stop_icon_1);
+                    startServiceMusic();
                     stopAnimation();
                 } else {
                     mediaPlayeroffline.start();
                     ibPlay.setImageResource(R.drawable.stop_icon_2);
                     updateSeekbar();
+                    startServiceMusic();
                     startAnimation();
                 }
             }
@@ -130,6 +152,7 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (musicAndPodcast.isLatest()) {
                     ListSongorPodcast(NEXT);
+                    startServiceMusic();
                 } else {
                     Toast.makeText(PlayMusicOfflineActivity.this, "Dánh sách phát đã hết!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -139,7 +162,7 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ListSongorPodcast(PREVIOUS);
-
+                startServiceMusic();
             }
         });
         sbTimelineMusic.setOnTouchListener(new View.OnTouchListener() {
@@ -192,7 +215,33 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
                 }, 1000);
             }
         });
+        startServiceMusic();
+        createChanelNotification();
+        LocalBroadcastManager.getInstance(PlayMusicOfflineActivity.this).registerReceiver(broadcastReceiver1,new IntentFilter(Constant.Send_Data_To_PlayMusic));
     }
+
+    private void createChanelNotification() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel(Constant.CHANNEL_ID,
+                    "Service Music",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setSound(null,null);
+            NotificationManager manager =  getSystemService(NotificationManager.class);
+            if(manager!= null){
+                manager.createNotificationChannel(channel);
+            }
+
+        }
+    }
+    public void startServiceMusic() {
+        Intent intent = new Intent(this, Myservice.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("audio",musicAndPodcast);
+        bundle.putString(Constant.State,Constant.offline);
+        intent.putExtras(bundle);
+        startService(intent);
+    }
+
     private void repeatAll(List<MusicAndPodcast> listSong) {
         mediaPlayeroffline.reset();
         tvPlayMusicArtistName.setText(listSong.get(0).getAuthorName());
@@ -251,6 +300,7 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
             }
         }
     }
+
     private void PreSong(List<MusicAndPodcast> listSong) {
         int pos =0;
         for (MusicAndPodcast bs: listSong) {
@@ -333,6 +383,20 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
     private void stopAnimation(){
         imgSong.animate().cancel();
     }
-
-
+    public BroadcastReceiver broadcastReceiver1 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(bundle ==null){
+                return;
+            }
+            isPlaying = bundle.getBoolean(Constant.Action_play_music_service_toPlayMusic_Boolean);
+            int action = bundle.getInt(Constant.Action_play_music_service_toPlayMusic_int);
+            handleActionMusic(action);
+        }
+    };
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
