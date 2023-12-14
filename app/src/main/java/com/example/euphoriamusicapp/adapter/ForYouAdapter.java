@@ -35,6 +35,8 @@ public class ForYouAdapter extends RecyclerView.Adapter<ForYouAdapter.ForYouView
     public ForYouAdapter(Context mContext,List<MusicAndPodcast> forYouImageList) {
         this.forYouImageList = forYouImageList;
         this.mContext = mContext;
+        forYouImageList.get(0).setFeatured(false);
+        forYouImageList.get(forYouImageList.size()-1).setFeatured(false);
     }
 
     @NonNull
@@ -65,11 +67,14 @@ public class ForYouAdapter extends RecyclerView.Adapter<ForYouAdapter.ForYouView
 
     private void onClickgotoPlaymusic(MusicAndPodcast forYouImage, int position) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+            PlayMusicActivity.mediaPlayer.reset();
             PlayMusicActivity.mediaPlayer.release();
             PlayMusicActivity.mediaPlayer = null;
         }
         if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
             PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+            PlayMusicOfflineActivity.mediaPlayeroffline.release();
+            PlayMusicOfflineActivity.mediaPlayeroffline = null;
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

@@ -6,6 +6,7 @@ import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
 import android.util.Base64;
@@ -15,12 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.FavouriteSongAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.RankingMusic;
+import com.example.euphoriamusicapp.fragment.PlaylistFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,6 +49,7 @@ public class SongFragment extends Fragment {
     private TextView tvFavouriteNumberOfSong;
     private ListView lvFavouriteSong;
     private ImageButton ibBack;
+    RelativeLayout rlFov;
 
     public SongFragment() {
         // Required empty public constructor
@@ -84,6 +88,7 @@ public class SongFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_song, container, false);
         lvFavouriteSong = view.findViewById(R.id.lvFavouriteSong);
+        rlFov = view.findViewById(R.id.rlFov);
         tvFavouriteNumberOfSong = view.findViewById(R.id.tvFavouriteNumberOfSong);
         ibBack = view.findViewById(R.id.ibBack);
         FavouriteSongAdapter favouriteSongAdapter = new FavouriteSongAdapter(getFavouriteMusicList(),getContext());
@@ -115,12 +120,12 @@ public class SongFragment extends Fragment {
                     songauthor = chuoi[1];
                     songauthor = songauthor.replace(".mp3","");
                 }
-               p1.setUrl(file.getAbsolutePath());
-               p1.setAuthorName(songauthor);
-               p1.setSongName(songname);
-               p1.setResourceId(R.drawable.imgsong);
-               p1.setFeatured(true);
-               p1.setLatest(true);
+                p1.setUrl(file.getAbsolutePath());
+                p1.setAuthorName(songauthor);
+                p1.setSongName(songname);
+                p1.setResourceId(R.drawable.imgsong);
+                p1.setFeatured(true);
+                p1.setLatest(true);
                 MediaMetadataRetriever retriever = new MediaMetadataRetriever();
                 retriever.setDataSource(file.getAbsolutePath());
                 byte[] imageData = retriever.getEmbeddedPicture();
@@ -130,7 +135,7 @@ public class SongFragment extends Fragment {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                     p1.setImage(bitmapToString(bitmap));
                 }
-               list.add(p1);
+                list.add(p1);
             }
 
         }

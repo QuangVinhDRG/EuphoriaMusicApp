@@ -37,7 +37,8 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
     public RecentListenAdapter(Context context,List<MusicAndPodcast> recentListenList) {
         this.mContext = context;
         this.basicMusicInformationList = recentListenList;
-
+        recentListenList.get(0).setFeatured(false);
+        recentListenList.get(recentListenList.size()-1).setFeatured(false);
 
     }
 
@@ -74,11 +75,14 @@ public class RecentListenAdapter extends RecyclerView.Adapter<RecentListenAdapte
 
     private void onClickgotoPlaymusic(MusicAndPodcast basicMusicInformation,int p) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+            PlayMusicActivity.mediaPlayer.reset();
             PlayMusicActivity.mediaPlayer.release();
             PlayMusicActivity.mediaPlayer = null;
         }
         if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
             PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+            PlayMusicOfflineActivity.mediaPlayeroffline.release();
+            PlayMusicOfflineActivity.mediaPlayeroffline = null;
         }
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

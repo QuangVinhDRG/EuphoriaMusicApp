@@ -1,23 +1,26 @@
 package com.example.euphoriamusicapp;
 
-import static com.example.euphoriamusicapp.PlayMusicActivity.mediaPlayer;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -103,21 +106,23 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
             tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
             tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
             imgSong.setImageBitmap(FavouriteSongAdapter.stringToBitmap(musicAndPodcast.getImage()));
-        }else {
-            //mediaPlayer = new MediaPlayer();
-            tvTatolTime.setText(milliSecordsToTimer(mediaPlayer.getDuration()));
-            tvPlayMusicArtistName.setText(musicAndPodcast.getAuthorName());
-            tvPlayMusicSongName.setText(musicAndPodcast.getSongName());
-            imgSong.setImageBitmap(FavouriteSongAdapter.stringToBitmap(musicAndPodcast.getImage()));
-            ibPlay.setImageResource(R.drawable.stop_icon_2);
-            tvCurrentTime.setText(milliSecordsToTimer(mediaPlayer.getCurrentPosition()));
-            updateSeekbar();
-            startAnimation();
+        }
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.RLPlaymuisc, new SongFragment(), "songFragment");
                 fragmentTransaction.commit();
@@ -251,7 +256,16 @@ public class PlayMusicOfflineActivity extends AppCompatActivity {
         prepareMediaPlayer(listSong.get(0).getUrl());
     }
 
-
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
 
 
 

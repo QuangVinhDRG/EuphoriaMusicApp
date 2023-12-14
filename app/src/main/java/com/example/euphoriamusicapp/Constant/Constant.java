@@ -8,6 +8,7 @@ public class Constant {
     public static final int explore = 102;
     public static final int newrelease = 103;
     public static final int podcast = 104;
+    public static final int search = 105;
     public static final String ListSong = "ListSong";
 
     public static final String StartMusic = "SongOrPodcast";

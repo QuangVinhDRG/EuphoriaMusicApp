@@ -69,11 +69,14 @@ public class NewReleaseAdapter extends RecyclerView.Adapter<NewReleaseAdapter.Ne
 
     private void onClickgotoPlaymusic(MusicAndPodcast newReleaseMusic, int position) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+            PlayMusicActivity.mediaPlayer.reset();
             PlayMusicActivity.mediaPlayer.release();
             PlayMusicActivity.mediaPlayer = null;
         }
         if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
             PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+            PlayMusicOfflineActivity.mediaPlayeroffline.release();
+            PlayMusicOfflineActivity.mediaPlayeroffline = null;
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

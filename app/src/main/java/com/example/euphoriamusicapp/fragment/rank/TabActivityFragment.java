@@ -2,6 +2,7 @@ package com.example.euphoriamusicapp.fragment.rank;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,7 +12,14 @@ import android.widget.ListView;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.RankingMusicAdapter;
+import com.example.euphoriamusicapp.data.MusicAndPodcast;
 import com.example.euphoriamusicapp.data.RankingMusic;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,20 +79,34 @@ public class TabActivityFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tab_activity, container, false);
         lvActivity = view.findViewById(R.id.lvActivity);
-    //    RankingMusicAdapter activityMusicAdapter = new RankingMusicAdapter(getActivityMusicList());
-      //  lvActivity.setAdapter(activityMusicAdapter);
+        getActivityMusicList();
         return view;
     }
 
-    private List<RankingMusic> getActivityMusicList() {
-        List<RankingMusic> list = new ArrayList<>();
-        list.add(new RankingMusic(R.drawable.dai_minh_tinh_image, 0, "Đại Minh Tinh", "Văn Mai Hương, Hứa Kim Tuyền"));
-        list.add(new RankingMusic(R.drawable.cat_doi_noi_sau_image, 1, "Cắt Đôi Nỗi Sầu", "Tăng Duy Tân, Drum7"));
-        list.add(new RankingMusic(R.drawable.tat_ca_hoac_khong_la_gi_ca_image, 2, "Tất Cả Hoặc Không Là Gì Cả", "Cao Thái Sơn, Đông Thiên Đức"));
-        list.add(new RankingMusic(R.drawable.le_luu_ly_image, 3, "Lệ Lưu Ly", "Vũ Phụng Tiên, DT Tập Rap"));
-        list.add(new RankingMusic(R.drawable.sao_troi_lam_gio_image, 4, "Sao Trời Làm Gió", "Nal, CT"));
-        list.add(new RankingMusic(R.drawable.anh_dau_muon_thay_em_buon_image, 5, "Anh Đâu Muốn Thấy Em Buồn", "Châu Khải Phong, ACV"));
-        list.add(new RankingMusic(R.drawable.can_tinh_nhu_the_image, 6, "Cạn Tình Như Thế", "DICKSON, Thành Đạt, Lê Chí Trung"));
-        return list;
+    private void getActivityMusicList() {
+        List<MusicAndPodcast> list = new ArrayList<>();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("songs");
+        Query query =  databaseReference.limitToLast(20);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(list != null){
+                    list.clear();
+                }
+                for (DataSnapshot data: snapshot.getChildren()) {
+                    MusicAndPodcast song = data.getValue(MusicAndPodcast.class);
+                    list.add(0,song);
+                }
+                RankingMusicAdapter activityMusicAdapter = new RankingMusicAdapter(list);
+                lvActivity.setAdapter(activityMusicAdapter);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 }

@@ -133,9 +133,12 @@ public class TabPlaylistFragment extends Fragment {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("playlist");
 
-        databaseReference.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(list!=null){
+                    list.clear();
+                }
                 for ( DataSnapshot data: snapshot.getChildren()
                      ) {
                     String name = data.getKey();

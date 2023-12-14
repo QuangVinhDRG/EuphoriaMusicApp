@@ -1,13 +1,21 @@
 package com.example.euphoriamusicapp;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -16,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -53,6 +62,8 @@ public class MainAppActivity extends AppCompatActivity {
         tvArtistName = findViewById(R.id.tvArtistName);
         civSongImage = findViewById(R.id.civSongImage);
         ibPlay = findViewById(R.id.ibPlayminimusic);
+
+        checkPermission();
         Intent intent = getIntent();
         s = intent.getStringExtra(Constant.Connection_key);
 
@@ -100,6 +111,7 @@ public class MainAppActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        checkPermission();
                         bottomNavigationView.getMenu().findItem(R.id.menuPlaylist).setChecked(true);
                         break;
                     case 1:
@@ -117,17 +129,30 @@ public class MainAppActivity extends AppCompatActivity {
                 }
             }
         });
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (s != null && s.equals(Constant.Connection_value)) {
                     if (item.getItemId() == R.id.menuPlaylist) {
+                        checkPermission();
                         viewPager2.setCurrentItem(0, false);
                     }else {
                         Toast.makeText(MainAppActivity.this, "Vui lòng kết nối mạng", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     if (item.getItemId() == R.id.menuPlaylist) {
+                        checkPermission();
                         viewPager2.setCurrentItem(0, false);
                     } else if (item.getItemId() == R.id.menuSearch) {
                         viewPager2.setCurrentItem(1, false);
@@ -233,6 +258,27 @@ public class MainAppActivity extends AppCompatActivity {
 
             }
     }
+    private void checkPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if(checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                String[] pemisson = {android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+                requestPermissions(pemisson, Constant.REQUEST_PERMISSON_CODE);
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(Constant.REQUEST_PERMISSON_CODE == requestCode){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Pemission allow", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this, "Pemission Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private void ShowInfor(){
         tvArtistName.setText(PlayMusicActivity.musicAndPodcast.getAuthorName());
         tvMiniPlaySongName.setText(PlayMusicActivity.musicAndPodcast.getSongName());
@@ -241,10 +287,33 @@ public class MainAppActivity extends AppCompatActivity {
                 .load(PlayMusicActivity.musicAndPodcast.getImage())
                 .into(civSongImage);
     }
-
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
     }
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Bạn có chắc chắn muốn thoát?")
+                .setCancelable(false)
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainAppActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("Không", null)
+                .show();
+    }
+
 }

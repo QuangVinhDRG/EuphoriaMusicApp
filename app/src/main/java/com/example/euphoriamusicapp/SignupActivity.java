@@ -3,7 +3,10 @@ package com.example.euphoriamusicapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +14,8 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -52,6 +57,17 @@ public class SignupActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
+        }
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         ibHideShowpass1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,10 +93,10 @@ public class SignupActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if(confirmpassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
                             confirmpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                            ibHideShowpass2.setImageResource(R.drawable.show);
+                            ibHideShowpass2.setImageResource(R.drawable.hide_password_24);
                         }else{
                             confirmpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                            ibHideShowpass2.setImageResource(R.drawable.hide_password_24);
+                            ibHideShowpass2.setImageResource(R.drawable.show);
                         }
                     }
                 });
@@ -204,7 +220,16 @@ public class SignupActivity extends AppCompatActivity {
             btn_SinUp.setEnabled(true);
         }
     }
-
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
     private void CheckInputs() {
         if(!username.getText().toString().isEmpty()){
             if(!email.getText().toString().isEmpty()){

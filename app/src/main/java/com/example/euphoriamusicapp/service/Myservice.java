@@ -33,7 +33,7 @@ public class Myservice extends Service {
 
     Bitmap bitmap_imSong = null;
     private MusicAndPodcast musicAndPodcastService;
-    Boolean isplaying =true;
+    Boolean isplaying = true;
     String state ="";
 
     @Override
@@ -88,10 +88,8 @@ public class Myservice extends Service {
         Intent intent;
         if(state.equals(Constant.online)){
              intent = new Intent(this, PlayMusicActivity.class);
-            Log.d("qqqqqqqqqqqqqqqqqqqq", "sendNotification: ");
         }else{
              intent = new Intent(this, PlayMusicOfflineActivity.class);
-            Log.d("ffff", "sendNotification: ");
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);

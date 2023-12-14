@@ -1,10 +1,12 @@
 package com.example.euphoriamusicapp.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -22,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.PlayMusicActivity;
+import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.WelcomeActivity;
 import com.example.euphoriamusicapp.data.user;
@@ -123,12 +126,25 @@ public class AccountFragment extends Fragment {
             public void onClick(View v) {
                 if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying())
                 {
-                    PlayMusicActivity.mediaPlayer.stop();
+                    PlayMusicActivity.mediaPlayer.release();
+                    PlayMusicActivity.mediaPlayer = null;
+                } else if ( PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
+                    PlayMusicOfflineActivity.mediaPlayeroffline .release();
+                    PlayMusicOfflineActivity.mediaPlayeroffline  = null;
                 }
-                mAuth.signOut();
-                Intent intent = new Intent();
-                intent.setClass(getActivity(),MainActivity.class);
-                getActivity().startActivity(intent);
+                new AlertDialog.Builder(getContext())
+                        .setMessage("Bạn có chắc chắn muốn đăng xuất?")
+                        .setCancelable(false)
+                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                mAuth.signOut();
+                                Intent intent = new Intent();
+                                intent.setClass(getActivity(),MainActivity.class);
+                                getActivity().startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("Không", null)
+                        .show();
 
             }
         });
@@ -137,9 +153,8 @@ public class AccountFragment extends Fragment {
 
     private void ShowInfor() {
         FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
-
         if (u != null) {
-           if(u.getDisplayName() == null){
+           if(u.getDisplayName().equals("")){
                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                DatabaseReference databaseReference = firebaseDatabase.getReference();
                databaseReference.child("users").child(u.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -147,20 +162,20 @@ public class AccountFragment extends Fragment {
                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                        user uu = snapshot.getValue(user.class);
                        String photoUrl = uu.getProfile();
-                       Log.d("dddddd", "onDataChange: " + uu.getName());
+                    //   Log.d("dddddd", "onDataChange: " + uu.getName());
                        username.setText(uu.getName());
                        Glide.with(getContext()).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
                    }
-
                    @Override
                    public void onCancelled(@NonNull DatabaseError error) {
-
                    }
                });
+           }else {
+               Uri photoUrl = u.getPhotoUrl();
+               username.setText(u.getDisplayName());
+               Glide.with(this).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
            }
-            Uri photoUrl = u.getPhotoUrl();
-            username.setText(u.getDisplayName());
-            Glide.with(this).load(photoUrl).error(R.drawable.ic_app_background).into(imgprofile);
+
         }
 
     }

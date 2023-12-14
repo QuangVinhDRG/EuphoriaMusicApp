@@ -20,6 +20,7 @@ import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
+import com.example.euphoriamusicapp.service.MusicPlayerService;
 
 import java.util.List;
 
@@ -65,9 +66,13 @@ public class FavouriteSongAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
                     PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+                    PlayMusicOfflineActivity.mediaPlayeroffline.release();
+                    PlayMusicOfflineActivity.mediaPlayeroffline = null;
                 }
                 if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
                     PlayMusicActivity.mediaPlayer.reset();
+                    PlayMusicActivity.mediaPlayer.release();
+                    PlayMusicActivity.mediaPlayer = null;
                 }
                 Intent intent  = new Intent(mContext, PlayMusicOfflineActivity.class);
                 Bundle bundle = new Bundle();

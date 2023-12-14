@@ -204,12 +204,17 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot data: snapshot.getChildren()
                 ) {
                     MusicAndPodcast song_url = data.getValue(MusicAndPodcast.class);
+                    song_url.setFeatured(true);
+                    song_url.setLatest(true);
                     listSong.add(song_url);
 
                 }
+
                 if(listSong.isEmpty()){
                     lLRecentListen.setVisibility(View.GONE);
                 }else{
+                    listSong.get(0).setFeatured(false);
+                    listSong.get(listSong.size() - 1).setLatest(false);
                     lLRecentListen.setVisibility(View.VISIBLE);
                     rvRecentListen.setAdapter(new RecentListenAdapter(getContext(),listSong));
                 }
@@ -240,8 +245,12 @@ public class HomeFragment extends Fragment {
                 }
                 for (DataSnapshot data: snapshot.getChildren()) {
                     MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    song.setFeatured(true);
+                    song.setLatest(true);
                     list.add(song);
-                }
+                };
+                list.get(0).setFeatured(false);
+                list.get(list.size() - 1).setLatest(false);
                 rvExplore.setAdapter(new ExploreAdapter(getContext(),list));
             }
 
@@ -252,8 +261,6 @@ public class HomeFragment extends Fragment {
         });
 
     }
-
-
 
     private void getForYouList() {
         List<MusicAndPodcast> list = new ArrayList<>();
@@ -270,8 +277,12 @@ public class HomeFragment extends Fragment {
                 }
                 for (DataSnapshot data: snapshot.getChildren()) {
                     MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    song.setFeatured(true);
+                    song.setLatest(true);
                     list.add(song);
                 }
+                list.get(0).setFeatured(false);
+                list.get(list.size() - 1).setLatest(false);
                 rvForYou.setAdapter(new ForYouAdapter(getContext(),list));
             }
 
@@ -299,8 +310,12 @@ public class HomeFragment extends Fragment {
                 }
                 for (DataSnapshot data: snapshot.getChildren()) {
                     MusicAndPodcast  song = data.getValue(MusicAndPodcast.class);
+                    song.setFeatured(true);
+                    song.setLatest(true);
                     list.add(0,song);
                 }
+                list.get(0).setFeatured(false);
+                list.get(list.size() - 1).setLatest(false);
                 rvNewRelease.setAdapter(new NewReleaseAdapter(getContext(),list));
             }
 
@@ -325,8 +340,12 @@ public class HomeFragment extends Fragment {
                     MusicAndPodcast podcast = data.getValue(MusicAndPodcast.class);
                     if(podcast.getType() == PODCAST){
                         listPodcast.add(podcast);
+                        podcast.setFeatured(true);
+                        podcast.setLatest(true);
                     }
                 }
+                listPodcast.get(0).setFeatured(false);
+                listPodcast.get(listPodcast.size() - 1).setLatest(false);
                 rvPodcast.setAdapter(new PodcastAdapter(getContext(),listPodcast));
 
             }

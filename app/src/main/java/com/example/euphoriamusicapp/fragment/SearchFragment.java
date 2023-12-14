@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.RecentListenAdapter;
@@ -95,10 +96,7 @@ public class SearchFragment extends Fragment {
         DeleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(list != null){
-                    list.clear();
-                    lvRecentSearch.deferNotifyDataSetChanged();
-                }
+                etSearch.setText(null);
             }
         });
         etSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -144,24 +142,28 @@ public class SearchFragment extends Fragment {
                     for (DataSnapshot data: snapshot.getChildren()) {
                         MusicAndPodcast song = data.getValue(MusicAndPodcast.class);
                         if(song.getSongName().contains(key)){
+                            song.setLatest(true);
+                            song.setFeatured(true);
                             list.add(song);
                         }
 
                     }
-                    RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(list);
-                    lvRecentSearch.setAdapter(recentSearchAdapter);
+                    if(list.isEmpty()){
+                        Toast.makeText(getContext(), "Không có bài hát bạn muốn tìm ", Toast.LENGTH_SHORT).show();
+                        RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(getContext(),list);
+                        lvRecentSearch.setAdapter(recentSearchAdapter);
+                    }else{
+                        list.get(0).setFeatured(false);
+                        list.get(list.size()-1).setLatest(false);
+                        RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(getContext(),list);
+                        lvRecentSearch.setAdapter(recentSearchAdapter);
+                    }
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
-        }else{
-            if(list != null){
-                list.clear();
-            }
-            RecentSearchAdapter recentSearchAdapter = new RecentSearchAdapter(list);
-            lvRecentSearch.setAdapter(recentSearchAdapter);
         }
     }
 }

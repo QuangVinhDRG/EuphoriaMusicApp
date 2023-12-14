@@ -61,7 +61,6 @@ public class PlaylistFragment extends Fragment {
     private ViewPager vpPlaylist;
     private ImageButton ibAccount;
     private EditText etPlaylistSearch;
-    private LinearLayout layoutMiniPlayMusic;
     public PlaylistFragment() {
         // Required empty public constructor
     }
@@ -107,7 +106,6 @@ public class PlaylistFragment extends Fragment {
                     fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
                     fragmentTransaction.commit();
                 } else if (position == 2) {
-
                     FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.playlistFragmentLayout, new SongFragment(), "songFragment");
                     fragmentTransaction.commit();
@@ -124,22 +122,8 @@ public class PlaylistFragment extends Fragment {
                 }
             }
         });
-
-
-//        ibAccount = view.findViewById(R.id.ibAccount);
-//        ViewGroup viewGroup = view.getRootView().findViewById(R.id.menuPlaylist);
-//        ViewPager2 viewPager2 = this.getLayoutInflater().inflate(R.layout.activity_main_app, viewGroup).findViewById(R.id.viewPagerMain);
-//        ibAccount.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                viewPager2.setCurrentItem(4, false);
-//                Toast.makeText(getContext(), "Hello", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
         return view;
     }
-
     private List<Library> getLibraryList() {
         SongFragment songFragment = new SongFragment();
         List<Library> list = new ArrayList<>();

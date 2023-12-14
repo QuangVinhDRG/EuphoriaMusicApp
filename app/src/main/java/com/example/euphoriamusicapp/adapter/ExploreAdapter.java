@@ -20,6 +20,7 @@ import com.example.euphoriamusicapp.PlayMusicOfflineActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.data.ImageOfMusic;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
+import com.example.euphoriamusicapp.service.MusicPlayerService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +35,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreV
     public ExploreAdapter(Context mCOntext,List<MusicAndPodcast> imageList) {
         this.exploreImageList = imageList;
         this.mContext = mCOntext;
+        imageList.get(0).setFeatured(false);
+        imageList.get(imageList.size()-1).setFeatured(false);
     }
 
     @NonNull
@@ -64,11 +67,14 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ExploreV
 
     private void onClickgotoPlaymusic(MusicAndPodcast exploreImage, int position) {
         if(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying()) {
+            PlayMusicActivity.mediaPlayer.reset();
             PlayMusicActivity.mediaPlayer.release();
             PlayMusicActivity.mediaPlayer = null;
         }
         if(PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying()) {
             PlayMusicOfflineActivity.mediaPlayeroffline.reset();
+            PlayMusicOfflineActivity.mediaPlayeroffline.release();
+            PlayMusicOfflineActivity.mediaPlayeroffline = null;
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
