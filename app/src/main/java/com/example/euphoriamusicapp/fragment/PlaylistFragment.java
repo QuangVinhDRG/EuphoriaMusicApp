@@ -6,6 +6,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,12 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.example.euphoriamusicapp.Constant.Constant;
 import com.example.euphoriamusicapp.MainActivity;
 import com.example.euphoriamusicapp.MainAppActivity;
 import com.example.euphoriamusicapp.PlayMusicActivity;
@@ -96,6 +99,7 @@ public class PlaylistFragment extends Fragment {
         ViewPagerPlaylistTabAdapter viewPagerPlaylistTabAdapter = new ViewPagerPlaylistTabAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         vpPlaylist.setAdapter(viewPagerPlaylistTabAdapter);
         tlPlaylist.setupWithViewPager(vpPlaylist);
+
         LibraryAdapter libraryAdapter = new LibraryAdapter(getLibraryList(), getContext());
         gvLibrary.setAdapter(libraryAdapter);
         gvLibrary.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -127,9 +131,9 @@ public class PlaylistFragment extends Fragment {
     private List<Library> getLibraryList() {
         SongFragment songFragment = new SongFragment();
         List<Library> list = new ArrayList<>();
-        list.add(new Library(R.drawable.musical_note_icon, "Bài hát", String.valueOf(songFragment.getFavouriteMusicList().size())));
+        list.add(new Library(R.drawable.musical_note_icon, "Bài hát", null));
         list.add(new Library(R.drawable.microphone_with_wire_icon, "Nghệ sĩ", null));
-        list.add(new Library(R.drawable.download_icon, "Trên thiết bị", "130"));
+        list.add(new Library(R.drawable.download_icon, "Trên thiết bị",  null));
         list.add(new Library(R.drawable.upload_icon, "Tải lên", null));
         return list;
     }

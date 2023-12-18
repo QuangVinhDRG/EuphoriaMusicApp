@@ -551,16 +551,19 @@ public class PlayMusicActivity extends AppCompatActivity{
             if(bundle ==null){
                 return;
             }
+            String state = bundle.getString("Off_Onl");
             isPlaying = bundle.getBoolean(Constant.Action_play_music_service_toPlayMusic_Boolean);
             int action = bundle.getInt(Constant.Action_play_music_service_toPlayMusic_int);
-            handleActionMusic(action);
+            if(state.equals(Constant.online)){
+                handleActionMusic(action);
+            }
         }
     };
     @Override
     protected void onDestroy() {
         super.onDestroy();
         miniLayoutmainapp();
-
+      //  unregisterReceiver(broadcastReceiver);
     }
 
 

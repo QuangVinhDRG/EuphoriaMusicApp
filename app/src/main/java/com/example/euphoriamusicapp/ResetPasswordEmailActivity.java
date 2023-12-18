@@ -115,7 +115,6 @@ public class ResetPasswordEmailActivity extends AppCompatActivity {
                         if(acc.getEmail().equals(edtEmail.getText().toString()))
                         {
                             Ischeck = true;
-                            Log.d("hiiihi", "onDataChange: ");
                             break;
                         }
                     }

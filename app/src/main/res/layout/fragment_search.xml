@@ -6,7 +6,8 @@
     tools:context=".fragment.SearchFragment"
     android:orientation="vertical"
     android:clickable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:paddingTop="10dp">
 
     <!-- TODO: Update blank fragment layout -->
     <ImageButton

@@ -54,10 +54,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onStart();
 //        Intent intent = new Intent(WelcomeActivity.this, UpLoadSong.class);
 //           startActivity(intent);
-
+        // Kiểm tra xem điện thoại có kêt snoois wifi hoặc 4g không
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi =  connectivityManager.getNetworkInfo(connectivityManager.TYPE_WIFI);
         NetworkInfo mobile_3g4g =  connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE);
+
         if(wifi.isConnected() || mobile_3g4g.isConnected()){
             FirebaseUser user = mAuth.getCurrentUser();
             if(user != null){

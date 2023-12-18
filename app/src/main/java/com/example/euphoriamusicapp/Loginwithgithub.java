@@ -60,10 +60,7 @@ public class Loginwithgithub extends AppCompatActivity {
             public void onClick(View v) {
                 if(Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
                     OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
-                    // Target specific email with login hint.
                     provider.addCustomParameter("login", email.getText().toString());
-                    // Request read access to a user's email addresses.
-// This must be preconfigured in the app's API permissions.
                     List<String> scopes =
                             new ArrayList<String>() {
                                 {

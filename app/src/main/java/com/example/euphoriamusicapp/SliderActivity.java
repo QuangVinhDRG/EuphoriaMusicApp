@@ -64,6 +64,7 @@ public class SliderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SliderActivity.this, MainAppActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {

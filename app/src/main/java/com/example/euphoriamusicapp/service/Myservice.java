@@ -198,6 +198,7 @@ public class Myservice extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         stopSelf();
+
     }
 
     @Override
@@ -210,6 +211,7 @@ public class Myservice extends Service {
         bundle.putBoolean(Constant.Action_play_music_service_toPlayMusic_Boolean,isplaying);
         bundle.putInt(Constant.Action_play_music_service_toPlayMusic_int,action);
         bundle.putSerializable(Constant.ActionMusic_BroadcastReceiver_Object,musicAndPodcastService);
+        bundle.putString("Off_Onl",state);
         intent.putExtras(bundle);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }

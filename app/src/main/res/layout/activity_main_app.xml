@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainAppActivity"
     android:background="@drawable/app_background_gradient_45deg"
-    android:id="@+id/rlMainApp">
+    android:id="@+id/rlMainApp"
+    android:paddingTop="30dp">
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/miniPlayMusic"/>
+        android:layout_above="@id/miniPlayMusic"
+        />
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

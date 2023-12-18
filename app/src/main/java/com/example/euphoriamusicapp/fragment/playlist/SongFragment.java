@@ -19,6 +19,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.euphoriamusicapp.MainAppActivity;
+import com.example.euphoriamusicapp.PlayMusicActivity;
 import com.example.euphoriamusicapp.R;
 import com.example.euphoriamusicapp.adapter.FavouriteSongAdapter;
 import com.example.euphoriamusicapp.data.MusicAndPodcast;
@@ -91,10 +93,16 @@ public class SongFragment extends Fragment {
         rlFov = view.findViewById(R.id.rlFov);
         tvFavouriteNumberOfSong = view.findViewById(R.id.tvFavouriteNumberOfSong);
         ibBack = view.findViewById(R.id.ibBack);
-        FavouriteSongAdapter favouriteSongAdapter = new FavouriteSongAdapter(getFavouriteMusicList(),getContext());
-        tvFavouriteNumberOfSong.setText(String.valueOf(favouriteSongAdapter.getCount()));
-        lvFavouriteSong.setAdapter(favouriteSongAdapter);
-        getMusicFiles();
+        if(getFavouriteMusicList()!= null){
+            FavouriteSongAdapter favouriteSongAdapter = new FavouriteSongAdapter(getFavouriteMusicList(),getContext());
+            tvFavouriteNumberOfSong.setText(String.valueOf(favouriteSongAdapter.getCount()));
+            lvFavouriteSong.setAdapter(favouriteSongAdapter);
+        }
+
+        if( (PlayMusicActivity.mediaPlayer == null)){
+            MainAppActivity.layoutMiniPlayMusic.setVisibility(View.GONE);
+        }
+
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,47 +114,45 @@ public class SongFragment extends Fragment {
 
     public List<MusicAndPodcast> getFavouriteMusicList() {
         File[] listfile = getMusicFiles();
-        List<MusicAndPodcast> list = new ArrayList<>();
-        for ( File file: listfile
-        ) {
-            MusicAndPodcast p1 = new MusicAndPodcast() ;
+        if(listfile!=null){
+            List<MusicAndPodcast> list = new ArrayList<>();
+            for ( File file: listfile
+            ) {
+                MusicAndPodcast p1 = new MusicAndPodcast() ;
 
-            if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
-                String[] chuoi = file.getName().split("\\+");
-                String songname ="";
-                String songauthor="";
-                if (chuoi.length >= 2) {
-                    songname = chuoi[0];
-                    songauthor = chuoi[1];
-                    songauthor = songauthor.replace(".mp3","");
-                }
-                p1.setUrl(file.getAbsolutePath());
-                p1.setAuthorName(songauthor);
-                p1.setSongName(songname);
-                p1.setResourceId(R.drawable.imgsong);
-                p1.setFeatured(true);
-                p1.setLatest(true);
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(file.getAbsolutePath());
-                byte[] imageData = retriever.getEmbeddedPicture();
+                if (file.isFile() && file.getName().toLowerCase().endsWith(".mp3")) {
+                    String[] chuoi = file.getName().split("\\+");
+                    String songname ="";
+                    String songauthor="";
+                    if (chuoi.length >= 2) {
+                        songname = chuoi[0];
+                        songauthor = chuoi[1];
+                        songauthor = songauthor.replace(".mp3","");
+                    }
+                    p1.setUrl(file.getAbsolutePath());
+                    p1.setAuthorName(songauthor);
+                    p1.setSongName(songname);
+                    p1.setResourceId(R.drawable.imgsong);
+                    p1.setFeatured(true);
+                    p1.setLatest(true);
+                    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                    retriever.setDataSource(file.getAbsolutePath());
+                    byte[] imageData = retriever.getEmbeddedPicture();
 
-                if (imageData != null) {
-                    // Chuyển đổi dữ liệu hình ảnh thành Bitmap và hiển thị nó trong ImageView
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                    p1.setImage(bitmapToString(bitmap));
+                    if (imageData != null) {
+                        // Chuyển đổi dữ liệu hình ảnh thành Bitmap và hiển thị nó trong ImageView
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                        p1.setImage(bitmapToString(bitmap));
+                    }
+                    list.add(p1);
                 }
-                list.add(p1);
             }
-
+            return list;
         }
-        list.get(0).setFeatured(false);
-        list.get(list.size() - 1).setLatest(false);
-        return list;
+        return null;
     }
     private static File[] getMusicFiles() {
         File musicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-
-        // Kiểm tra xem thư mục có tồn tại không
         if (musicDirectory.exists() && musicDirectory.isDirectory()) {
             return musicDirectory.listFiles();
         } else {
@@ -154,11 +160,16 @@ public class SongFragment extends Fragment {
         }
     }
     public static String bitmapToString(Bitmap bitmap) {
+        if (bitmap == null) {
+            // Xử lý trường hợp bitmap là null, ví dụ: trả về chuỗi rỗng hoặc giá trị mặc định
+            return "";
+        }
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
 
 
 

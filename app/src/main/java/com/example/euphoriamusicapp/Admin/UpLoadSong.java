@@ -289,6 +289,7 @@ public class UpLoadSong extends AppCompatActivity implements AdapterView.OnItemS
             StorageReference fileReference = mStorageref.child(System.currentTimeMillis() + ".jpg");
 
             // Tạo một ByteArrayOutputStream để chuyển đổi byte array thành dạng dữ liệu cần thiết để tải lên
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             baos.write(imageData, 0, imageData.length);
 

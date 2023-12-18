@@ -74,6 +74,7 @@ public class SignupActivity extends AppCompatActivity {
                 ibHideShowpass1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // ẩn hiện mật khẩu
                         if(password.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
                             password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             ibHideShowpass1.setImageResource(R.drawable.hide_password_24);
@@ -91,6 +92,7 @@ public class SignupActivity extends AppCompatActivity {
                 ibHideShowpass2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // ẩn hiện mật khẩu
                         if(confirmpassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
                             confirmpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                             ibHideShowpass2.setImageResource(R.drawable.hide_password_24);
@@ -113,8 +115,6 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SignUpwithFireBase();
-
-
             }
         });
         username.addTextChangedListener(new TextWatcher() {
@@ -192,6 +192,7 @@ public class SignupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    // đẩy dữ liệu của user lên realtime database
                                     HashMap<String,Object> map = new HashMap<>();
                                     map.put("id",user.getUid());
                                     map.put("name",username.getText().toString());

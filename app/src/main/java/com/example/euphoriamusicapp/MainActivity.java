@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SignupActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         tvForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ResetPasswordEmailActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         btnloginGitHub.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,Loginwithgithub.class);
                 startActivity(intent);
-
+                finish();
             }
         });
         btnloginGG.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, FacebookAuthActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
+                finish();
             }
         });
         edtEmail.addTextChangedListener(new TextWatcher() {
@@ -219,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Intent intent = new Intent(MainActivity.this,SliderActivity.class);
                             startActivity(intent);
+                            finish();
                         }else {
                             Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -251,9 +255,11 @@ public class MainActivity extends AppCompatActivity {
                                         if(i == 1){
                                             Intent intent = new Intent(MainActivity.this, UpLoadSong.class);
                                             startActivity(intent);
+                                            finish();
                                         }else{
                                             Intent intent = new Intent(MainActivity.this,SliderActivity.class);
                                             startActivity(intent);
+                                            finish();
                                         }
                                     }
                                     @Override

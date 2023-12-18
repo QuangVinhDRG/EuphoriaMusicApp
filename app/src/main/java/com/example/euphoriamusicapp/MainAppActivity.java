@@ -36,16 +36,18 @@ import com.example.euphoriamusicapp.adapter.MainAppAdapter;
 
 import com.example.euphoriamusicapp.service.Myservice;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainAppActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private BottomNavigationView bottomNavigationView;
-    private LinearLayout layoutMiniPlayMusic;
+    public static LinearLayout layoutMiniPlayMusic;
     private ImageButton ibPlay;
-    private TextView tvMiniPlaySongName, tvArtistName;
-    private CircleImageView civSongImage;
+    public static TextView tvMiniPlaySongName, tvArtistName;
+    public static CircleImageView civSongImage;
     private RelativeLayout rlMainApp;
     String s;
     public  static int currentList;
@@ -66,8 +68,7 @@ public class MainAppActivity extends AppCompatActivity {
         checkPermission();
         Intent intent = getIntent();
         s = intent.getStringExtra(Constant.Connection_key);
-
-        if((PlayMusicOfflineActivity.mediaPlayeroffline != null && PlayMusicOfflineActivity.mediaPlayeroffline.isPlaying() )|| PlayMusicActivity.isPlaying||(PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying() )|| PlayMusicActivity.isPlaying){
+        if( (PlayMusicActivity.mediaPlayer != null && PlayMusicActivity.mediaPlayer.isPlaying())){
             layoutMiniPlayMusic.setVisibility(View.VISIBLE);
             //KHOI TAO MINI LAYOUT
             currentList = PlayMusicActivity.checkList;
@@ -90,6 +91,7 @@ public class MainAppActivity extends AppCompatActivity {
                     ibPlay.setImageResource(R.drawable.play_icon);
                     Intent intent = new Intent(MainAppActivity.this, Myservice.class);
                     Bundle bundle = new Bundle();
+                    bundle.putString(Constant.State,Constant.online);
                     bundle.putSerializable("audio",PlayMusicActivity.musicAndPodcast);
                     intent.putExtras(bundle);
                     startService(intent);
@@ -98,6 +100,7 @@ public class MainAppActivity extends AppCompatActivity {
                     ibPlay.setImageResource(R.drawable.pause_button);
                     Intent intent = new Intent(MainAppActivity.this, Myservice.class);
                     Bundle bundle = new Bundle();
+                    bundle.putString(Constant.State,Constant.online);
                     bundle.putSerializable("audio",PlayMusicActivity.musicAndPodcast);
                     intent.putExtras(bundle);
                     startService(intent);
@@ -236,7 +239,6 @@ public class MainAppActivity extends AppCompatActivity {
     };
 
     private void handleActionMusic(int action) {
-
             switch (action){
                 case Constant.ACTION_PAUSE:
                     ibPlay.setImageResource(R.drawable.play_icon);
@@ -275,7 +277,11 @@ public class MainAppActivity extends AppCompatActivity {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Pemission allow", Toast.LENGTH_SHORT).show();
             }else{
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
                 Toast.makeText(this, "Pemission Denied", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainAppActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         }
     }
@@ -302,18 +308,6 @@ public class MainAppActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
     }
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setMessage("Bạn có chắc chắn muốn thoát?")
-                .setCancelable(false)
-                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MainAppActivity.super.onBackPressed();
-                    }
-                })
-                .setNegativeButton("Không", null)
-                .show();
-    }
+
 
 }
